@@ -238,10 +238,54 @@ body.zlock{overflow:hidden}
 @media (display-mode:standalone){.a2hs{display:none}}
 .wrap{padding-top:calc(40px + env(safe-area-inset-top));padding-bottom:calc(56px + env(safe-area-inset-bottom))}
 @media (min-width:600px){.wrap{padding-top:calc(56px + env(safe-area-inset-top))}}
+
+/* 保存した人：相性をまとめて見る */
+.crow.hasPk{display:flex;gap:6px;align-items:flex-start}
+.crow .cbody{flex:1;min-width:0}
+.pk{flex:0 0 52px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:52px;padding-top:4px;margin:0;cursor:pointer;font-size:11px;line-height:1.3;color:#253A5E}
+.pk input{width:30px;height:30px;margin:0 0 2px;accent-color:#253A5E;cursor:pointer}
+.pairbar{position:sticky;top:0;z-index:5;background:#FDF9EF;border:1px solid var(--line);padding:10px 12px;margin:0 0 12px;box-shadow:0 2px 6px rgba(37,58,94,.12)}
+.pairbar .pcount{font-family:"Shippori Mincho",serif;font-weight:600;font-size:17px;margin:0 0 2px}
+.pairbar .btn.mini{margin:6px 6px 0 0}
+.pairbar .btn:disabled{opacity:.45;cursor:not-allowed}
+.pairbar .psmall{font-size:12.5px;color:#4b5a76;margin:2px 0 0}
+.pairbar .pmsg{font-size:14px;color:#8a4b1e;margin:4px 0 0;min-height:1.2em}
+.pairout{margin:0 0 16px}
+.sortbar{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.sortbar button{flex:1 1 140px;min-height:44px;font:inherit;font-size:14px;color:#253A5E;background:#FDF9EF;border:1px solid #D69C1C;border-radius:2px;cursor:pointer}
+.sortbar button[aria-pressed="true"]{background:#253A5E;color:#FDF9EF;border-color:#253A5E}
+.prow{background:var(--card);border:1px solid var(--line);padding:12px 14px;margin:0 0 10px}
+.prow .prt{font-family:"Shippori Mincho",serif;font-weight:600;font-size:16px;margin:0}
+.prow .pnum{margin:2px 0 6px;font-size:15px}
+.prow details summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:#253A5E;font-size:14px}
+/* 合言葉ゲート（簡易な入口） */
+.wrap[hidden]{display:none}
+.gate{min-height:100vh;min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:calc(24px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom))}
+.gate[hidden]{display:none}
+.gate-in{width:100%;max-width:420px;text-align:center}
+.gate .form{text-align:left;margin-top:20px}
+.gate-msg{min-height:1.85em;margin:8px 0 0;font-size:14px;color:#8a3b1f}
+.gate-note{font-size:12.5px;color:#4b5a76;margin:18px 0 0}
 </style>
 </head>
 <body>
-<div class="wrap">
+<!-- 合言葉ゲート：解錠するまでアプリ本体は表示しない -->
+<div class="gate" id="gate">
+  <div class="gate-in">
+    <p class="en">SCENT</p>
+    <div class="orn">✦ ✦ ✦</div>
+    <h1>生まれ日占い</h1>
+    <form class="form" id="gateForm" autocomplete="off" onsubmit="return false">
+      <label for="gateWord">合言葉を入れてください</label>
+      <input type="text" id="gateWord" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="go">
+      <p class="gate-msg" id="gateMsg" role="alert" aria-live="polite"></p>
+      <button type="submit" class="btn" id="gateBtn">はじめる</button>
+    </form>
+    <p class="gate-note">合言葉は、SCENTのスタッフからお伝えしています。</p>
+  </div>
+</div>
+
+<div class="wrap" id="appWrap" hidden>
   <header>
     <p class="en">SCENT</p>
     <div class="orn">✦ ✦ ✦</div>
@@ -369,7 +413,7 @@ body.zlock{overflow:hidden}
     <p class="orn">✦</p>
     <p>エンターテインメントとしてお楽しみください。</p>
     <p>点数は、四柱推命の考え方にもとづいて計算したものです。占いなので、科学的な裏づけがあるものではありません。</p>
-    <p>入力した内容は、この端末の中で計算するだけで、どこにも送信しません。『この端末に保存』した内容は、このスマホの中だけに残ります（ブラウザのデータを消すと消えます）。</p>
+    <p>入力した内容は、この端末の中で計算するだけで、どこにも送信しません。合言葉の確認も、この端末の中だけで行います。『この端末に保存』した内容は、このスマホの中だけに残ります（ブラウザのデータを消すと消えます）。</p>
     <p>文字の書体（フォント）は Google Fonts から読み込みます。このとき、入力した内容は送られません。</p>
     <div class="a2hs">
       <h2>ホーム画面に追加する方法</h2>
@@ -1153,7 +1197,7 @@ function setTab(name){
     $(map[k][1]).hidden = !on;
   });
   $('soloInput').hidden = (name === 'pair' || name === 'zukan' || name === 'people');
-  if (name === 'people'){ peopleUI = { mode:'', id:'', msg:'' }; renderPeople(); }
+  if (name === 'people'){ peopleUI = { mode:'', id:'', msg:'' }; pairUI = { ids:[], sort:'compat', shown:false, msg:'' }; renderPeople(); }
   if (name === 'zukan') updateZukanMark();
   if (name === 'karte') renderKarte();
 }
@@ -1747,6 +1791,8 @@ var STORE_KEY = 'scent-uranai-people-v1', MAX_PEOPLE = 100;
 var MSG_NOSTORE = 'この端末では保存できません';
 var storeBroken = false;
 var peopleUI = { mode:'', id:'', msg:'' };
+var pairUI = { ids:[], sort:'compat', shown:false, msg:'' };
+var MAX_PICK = 10;
 
 function cleanPerson(p){
   if (!p || typeof p !== 'object') return null;
@@ -1846,6 +1892,8 @@ function onSavePerson(){
 // 「保存した人」タブ
 function renderPeople(){
   var box = $('peopleBox'), list = storeRead(), h = '', i;
+  pairUI.ids = pairUI.ids.filter(function(id){ return list.some(function(p){ return p.id === id; }); });
+  h += '<div class="pairbar" id="pairBar"></div><div class="pairout" id="pairOut"></div>';
   if (storeBroken){ box.innerHTML = '<div class="card"><p style="margin:0">' + esc(MSG_NOSTORE) + '</p></div>'; return; }
   if (!list.length){
     box.innerHTML = '<div class="card"><p style="margin:0">まだ保存した人はいません。占ったあと『この端末に保存』から追加できます</p></div>'
@@ -1854,7 +1902,8 @@ function renderPeople(){
   }
   for (i = 0; i < list.length; i++){
     var p = list[i], ch = charOf(p), mine = (peopleUI.id === p.id);
-    h += '<div class="crow" data-id="' + esc(p.id) + '"><p class="cn">' + esc(p.name) + (p.me ? '<span class="selfmark">自分</span>' : '') + '</p>'
+    h += '<div class="crow hasPk" data-id="' + esc(p.id) + '"><label class="pk"><input type="checkbox" data-pk="' + esc(p.id) + '"'
+      + (pairUI.ids.indexOf(p.id) >= 0 ? ' checked' : '') + ' aria-label="相性を見る人に選ぶ：' + esc(p.name) + '"><span>選ぶ</span></label><div class="cbody"><p class="cn">' + esc(p.name) + (p.me ? '<span class="selfmark">自分</span>' : '') + '</p>'
       + '<p class="small">' + dateText(p) + '生まれ' + (p.t ? '（' + esc(p.t) + '）' : '') + '</p>'
       + '<p>' + esc(ch.name) + '</p>';
     if (mine && peopleUI.mode === 'rename'){
@@ -1871,7 +1920,7 @@ function renderPeople(){
         + '<button type="button" class="btn mini sub" data-act="rename">名前を変える</button>'
         + '<button type="button" class="btn mini danger" data-act="del">削除</button>';
     }
-    h += '</div>';
+    h += '</div></div>';
   }
   h += '<p class="small" style="margin:0 0 6px">保存：' + list.length + '人（' + MAX_PEOPLE + '人まで）</p>';
   if (peopleUI.mode === 'delAll'){
@@ -1883,6 +1932,7 @@ function renderPeople(){
   }
   h += '<p class="msg" role="status">' + esc(peopleUI.msg || '') + '</p>';
   box.innerHTML = h;
+  renderPairBar();
   if (peopleUI.mode === 'rename' && $('renameInput')) $('renameInput').focus();
 }
 function onPeopleClick(ev){
@@ -1922,6 +1972,78 @@ function onPeopleClick(ev){
     peopleUI = { mode:'', id:'', msg: storeClear() ? 'すべて削除しました' : MSG_NOSTORE };
     renderPeople(); refreshPairSelects(); return;
   }
+}
+
+// ---- 保存した人どうしの相性（チェックで選ぶ） ----
+function pickedPeople(){
+  return storeRead().filter(function(p){ return pairUI.ids.indexOf(p.id) >= 0; });
+}
+function pillarOfP(p){ return pillarFromIndex(dayPillarIndex(p.y, p.m, p.d)); }
+function renderPairBar(){
+  var bar = $('pairBar'), out = $('pairOut');
+  if (!bar || !out) return;
+  var n = pairUI.ids.length;
+  bar.innerHTML = '<p class="pcount">選んだ人：' + n + '人</p>'
+    + '<p class="psmall">各行の左のチェックで、相性を見る人を選びます（2〜' + MAX_PICK + '人）。</p>'
+    + '<button type="button" class="btn mini" data-pa="show"' + (n < 2 ? ' disabled' : '') + '>相性を見る</button>'
+    + '<button type="button" class="btn mini sub" data-pa="clear"' + (n < 1 ? ' disabled' : '') + '>選択をすべて外す</button>'
+    + '<p class="pmsg" role="status">' + esc(pairUI.msg || '') + '</p>';
+  if (!pairUI.shown || n < 2){ out.innerHTML = ''; return; }
+  var ps = pickedPeople(), h = '', i, j;
+  if (ps.length === 2){
+    out.innerHTML = buildPair(ps[0].name, ps[0], ps[1].name, ps[1], false).html;
+    return;
+  }
+  var rows = [];
+  for (i = 0; i < ps.length; i++) for (j = i + 1; j < ps.length; j++){
+    var A = pillarOfP(ps[i]), B = pillarOfP(ps[j]);
+    rows.push({ a:i, b:j, n:rows.length, c:compatScore(A, B).score, l:loveScore(A, B).score });
+  }
+  var key = pairUI.sort === 'love' ? 'l' : 'c';
+  rows.sort(function(x, y){ return (y[key] - x[key]) || (x.n - y.n); });
+  h += '<p class="small" style="margin:0 0 6px">' + rows.length + '組の相性です。</p>'
+    + '<div class="sortbar"><button type="button" data-pa="sortc" aria-pressed="' + (key === 'c') + '">相性の高い順</button>'
+    + '<button type="button" data-pa="sortl" aria-pressed="' + (key === 'l') + '">恋愛の高い順</button></div>';
+  for (i = 0; i < rows.length; i++){
+    var r = rows[i];
+    h += '<div class="prow"><p class="prt">' + (i + 1) + '. ' + esc(ps[r.a].name) + ' × ' + esc(ps[r.b].name) + '</p>'
+      + '<p class="pnum">相性 ' + r.c + '点／恋愛 ' + r.l + '点</p>'
+      + '<details data-a="' + r.a + '" data-b="' + r.b + '"><summary>くわしく</summary><div class="pdet"></div></details></div>';
+  }
+  out.innerHTML = h;
+}
+function onPairBoxClick(ev){
+  var b = ev.target.closest ? ev.target.closest('button[data-pa]') : null;
+  if (!b || b.disabled) return;
+  var a = b.getAttribute('data-pa');
+  if (a === 'clear'){ pairUI.ids = []; pairUI.shown = false; pairUI.msg = ''; renderPeople(); return; }
+  if (a === 'show'){
+    if (pairUI.ids.length < 2) return;
+    pairUI.shown = true; pairUI.msg = ''; renderPairBar();
+    $('pairOut').scrollIntoView({ behavior: smooth(), block:'start' });
+    return;
+  }
+  if (a === 'sortc' || a === 'sortl'){ pairUI.sort = a === 'sortl' ? 'love' : 'compat'; renderPairBar(); }
+}
+function onPairBoxChange(ev){
+  var t = ev.target;
+  if (!t || !t.getAttribute || !t.hasAttribute('data-pk')) return;
+  var id = t.getAttribute('data-pk'), at = pairUI.ids.indexOf(id);
+  if (t.checked){
+    if (pairUI.ids.length >= MAX_PICK){ t.checked = false; pairUI.msg = '選べるのは' + MAX_PICK + '人までです'; renderPairBar(); return; }
+    if (at < 0) pairUI.ids.push(id);
+  } else if (at >= 0){ pairUI.ids.splice(at, 1); }
+  pairUI.msg = ''; pairUI.shown = false;
+  renderPairBar();
+}
+// 「くわしく」を開いたときに、その2人の結果を作る（まとめて作ると重いため）
+function onPairToggle(ev){
+  var d = ev.target;
+  if (!d || d.tagName !== 'DETAILS' || !d.hasAttribute('data-a') || !d.open) return;
+  var box = d.querySelector('.pdet');
+  if (!box || box.firstChild) return;
+  var ps = pickedPeople(), a = ps[+d.getAttribute('data-a')], b = ps[+d.getAttribute('data-b')];
+  if (a && b) box.innerHTML = buildPair(a.name, a, b.name, b, false).html;
 }
 
 // 相性タブ：保存した人から選ぶ
@@ -1980,6 +2102,9 @@ function init(){
   $('goPair').addEventListener('click', runPair);
   $('svBtn').addEventListener('click', onSavePerson);
   $('peopleBox').addEventListener('click', onPeopleClick);
+  $('peopleBox').addEventListener('click', onPairBoxClick);
+  $('peopleBox').addEventListener('change', onPairBoxChange);
+  $('peopleBox').addEventListener('toggle', onPairToggle, true);
   $('tabPeople').addEventListener('click', function(){ setTab('people'); });
   $('ps1').addEventListener('change', function(){ onPairPick(1); });
   $('ps2').addEventListener('change', function(){ onPairPick(2); });
@@ -2005,7 +2130,104 @@ function init(){
   $('pairResult').innerHTML = buildPair('', {y:1995,m:5,d:20}, '', {y:1998,m:11,d:3}, true).html;
   registerSW();
 }
-init();
+
+/* =====================================================================
+   合言葉ゲート
+   簡易な合言葉の確認。強い守りではない（ページの中身を見れば通り抜けられる）。
+   ここには合言葉そのものは書かず、SHA-256 のハッシュ値だけを置いている。
+   合言葉を変えるときは GATE_HASH を新しいハッシュに替える
+   （保存値は先頭16文字と照合するので、替えると全員がゲートに戻る）。
+   ===================================================================== */
+(function(){
+  var GATE_HASH = 'aad5f52ea233843b5609cd5677a8e4733af140d17050a6f3a130409289727ea1';
+  var LS_KEY = 'scent-uranai-unlocked-v1';
+  var MAX_FAIL = 5, LOCK_MS = 30000;
+  var gate = document.getElementById('gate');
+  var wrap = document.getElementById('appWrap');
+  var form = document.getElementById('gateForm');
+  var input = document.getElementById('gateWord');
+  var btn = document.getElementById('gateBtn');
+  var msg = document.getElementById('gateMsg');
+  var fails = 0, lockUntil = 0, timer = null, started = false;
+
+  function normalize(t){ return String(t).trim().toLowerCase(); }
+  function sha256Hex(t){
+    var data = new TextEncoder().encode(t);
+    return crypto.subtle.digest('SHA-256', data).then(function(buf){
+      var a = new Uint8Array(buf), h = '';
+      for (var i = 0; i < a.length; i++) h += (a[i] < 16 ? '0' : '') + a[i].toString(16);
+      return h;
+    });
+  }
+  function check(t){ return sha256Hex(normalize(t)).then(function(h){ return h === GATE_HASH; }); }
+  function readSaved(){ try { return localStorage.getItem(LS_KEY); } catch (e) { return null; } }
+  function save(){ try { localStorage.setItem(LS_KEY, GATE_HASH.slice(0, 16)); } catch (e) {} }
+  function clearHash(){
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+  function start(){
+    if (started) return;
+    started = true;
+    gate.hidden = true;
+    wrap.hidden = false;
+    init();
+  }
+  function unlock(){ save(); start(); }
+
+  function tick(){
+    var left = Math.ceil((lockUntil - Date.now()) / 1000);
+    if (left > 0) {
+      msg.textContent = '5回まちがえました。あと' + left + '秒お待ちください。';
+      return;
+    }
+    clearInterval(timer); timer = null;
+    fails = 0; btn.disabled = false; input.disabled = false;
+    msg.textContent = '';
+  }
+  function lock(){
+    lockUntil = Date.now() + LOCK_MS;
+    btn.disabled = true; input.disabled = true;
+    tick();
+    timer = setInterval(tick, 500);
+  }
+
+  function noCrypto(){
+    return !(window.crypto && crypto.subtle && window.TextEncoder);
+  }
+  function showNoCrypto(){
+    msg.textContent = 'このページは https で開いてください。';
+    btn.disabled = true; input.disabled = true;
+  }
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    if (Date.now() < lockUntil) return;
+    if (noCrypto()) { showNoCrypto(); return; }
+    var v = input.value;
+    check(v).then(function(ok){
+      if (ok) { input.value = ''; unlock(); return; }
+      fails++;
+      input.select();
+      if (fails >= MAX_FAIL) { lock(); }
+      else { msg.textContent = '合言葉がちがいます'; }
+    }).catch(function(){ showNoCrypto(); });
+  });
+
+  // 1) 保存済みの解錠印（ハッシュの先頭16文字）が合っていれば、そのまま開く
+  if (readSaved() === GATE_HASH.slice(0, 16)) { clearHash(); start(); return; }
+
+  // 2) QRコードのアドレス末尾 #k=合言葉 を読み取って自動判定
+  var m = /^#k=(.*)$/.exec(location.hash || '');
+  if (m) {
+    var word = m[1];
+    try { word = decodeURIComponent(word); } catch (e) {}
+    clearHash(); // 合言葉がアドレス・ブックマーク・共有に残らないよう、すぐ消す
+    if (noCrypto()) { showNoCrypto(); return; }
+    check(word).then(function(ok){ if (ok) unlock(); }).catch(function(){ showNoCrypto(); });
+  } else if (noCrypto()) {
+    showNoCrypto();
+  }
+})();
 </script>
 </body>
 </html>
