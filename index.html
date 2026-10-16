@@ -2217,16 +2217,42 @@ function init(){
   if (readSaved() === GATE_HASH.slice(0, 16)) { clearHash(); start(); return; }
 
   // 2) QRコードのアドレス末尾 #k=合言葉 を読み取って自動判定
-  var m = /^#k=(.*)$/.exec(location.hash || '');
-  if (m) {
+  //    読み込み時のほか、開いたままのタブで同じページへ #k=... 付きで移動したとき
+  //    （hashchange）や、履歴から戻ったとき（pageshow）にも判定する
+  function showQrNotice(){
+    if (document.getElementById('qrNotice')) return;
+    var d = document.createElement('div');
+    d.id = 'qrNotice';
+    d.setAttribute('role', 'note');
+    d.style.cssText = 'display:flex;gap:8px;align-items:flex-start;margin:8px;padding:10px 12px;background:#fff8e1;color:#333;border:1px solid #e0c36a;border-radius:8px;font-size:13px;line-height:1.5';
+    var t = document.createElement('span');
+    t.style.flex = '1';
+    t.textContent = 'ホーム画面に追加したときは、最初の1回だけ合言葉を入れてください（iPhoneの仕様で、ホーム画面のアプリは別あつかいになるため）。';
+    var c = document.createElement('button');
+    c.type = 'button';
+    c.textContent = '閉じる';
+    c.style.cssText = 'flex:none;padding:4px 10px;font-size:13px';
+    c.addEventListener('click', function(){ if (d.parentNode) d.parentNode.removeChild(d); });
+    d.appendChild(t); d.appendChild(c);
+    wrap.insertBefore(d, wrap.firstChild);
+  }
+  function handleHash(){
+    if (started) return;
+    var m = /^#k=(.*)$/.exec(location.hash || '');
+    if (!m) return;
     var word = m[1];
     try { word = decodeURIComponent(word); } catch (e) {}
     clearHash(); // 合言葉がアドレス・ブックマーク・共有に残らないよう、すぐ消す
     if (noCrypto()) { showNoCrypto(); return; }
-    check(word).then(function(ok){ if (ok) unlock(); }).catch(function(){ showNoCrypto(); });
-  } else if (noCrypto()) {
-    showNoCrypto();
+    check(word).then(function(ok){
+      if (ok && !started) { unlock(); showQrNotice(); }
+    }).catch(function(){ showNoCrypto(); });
   }
+  window.addEventListener('hashchange', handleHash);
+  window.addEventListener('pageshow', handleHash);
+
+  if (/^#k=/.test(location.hash || '')) handleHash();
+  else if (noCrypto()) showNoCrypto();
 })();
 </script>
 </body>
