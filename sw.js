@@ -1,6 +1,6 @@
 /* SCENT 生まれ日占い サービスワーカー
    内容を更新したら、下の VERSION の数字を上げてください。 */
-var VERSION = 'v1';
+var VERSION = 'v2';
 var CACHE = 'scent-uranai-' + VERSION;
 var FONT_CACHE = 'scent-uranai-fonts-v1';
 var SHELL = [

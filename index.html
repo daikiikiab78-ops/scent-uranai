@@ -120,6 +120,13 @@ textarea.ta{display:block;width:100%;min-height:96px;font:inherit;font-size:16px
 .tabs.main button,.tabs.main button#tabList{flex:1 1 calc(50% - 4px);min-width:0;font-size:14px;line-height:1.4;padding:4px 6px}
 .pick{background:#FDF3D6;border:1px dashed #D69C1C;padding:14px 16px;margin:0 0 16px}
 .pick h2{font-family:"Shippori Mincho",serif;font-size:16px;margin:0 0 4px;font-weight:600}
+.selfmark{display:inline-block;border:1px solid #D69C1C;background:#FDF3D6;font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif;font-weight:400;font-size:12px;line-height:1.5;padding:0 8px;margin-left:6px;vertical-align:middle}
+.savebox{background:var(--card);border:1px solid var(--line);padding:16px;margin:0 0 14px}
+.savebox h2{font-family:"Shippori Mincho",serif;font-size:17px;margin:0 0 6px;font-weight:600}
+.savebox[hidden]{display:none}
+.pickp[hidden]{display:none}
+.pickp{margin:0 0 6px}
+.rrow input.rn{width:100%;min-height:48px;font:inherit;font-size:16px;color:#253A5E;background:#FDF9EF;border:1px solid #b9a77a;border-radius:2px;padding:6px 10px}
 .rankbox{margin:0 0 14px}
 .rankbox .rhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .rrow{background:var(--card);border:1px solid var(--line);padding:10px 14px;margin:0 0 8px}
@@ -271,10 +278,20 @@ body.zlock{overflow:hidden}
     <button type="button" id="tabPair" role="tab" aria-selected="false">相性</button>
     <button type="button" id="tabKarte" role="tab" aria-selected="false">カルテ</button>
     <button type="button" id="tabZukan" role="tab" aria-selected="false">キャラクター一覧</button>
+    <button type="button" id="tabPeople" role="tab" aria-selected="false">保存した人</button>
   </div>
 
   <section id="panelChar" class="panel" role="tabpanel">
     <div id="result"></div>
+    <div class="savebox" id="saveBox" hidden>
+      <h2>この端末に保存</h2>
+      <label for="svName" style="margin-top:4px">ニックネーム（12字まで）</label>
+      <input type="text" id="svName" maxlength="12">
+      <div class="chk"><input type="checkbox" id="svSelf"><label for="svSelf" style="margin:0">自分として保存</label></div>
+      <button type="button" class="btn" id="svBtn">この端末に保存</button>
+      <p class="msg" id="svMsg" role="status"></p>
+      <p class="hint">ほかの人の情報は、ご本人の了解を得てから保存しましょう。</p>
+    </div>
     <button type="button" class="btn sub" id="copyBtn">結果をコピー</button>
     <p class="msg" id="copyMsg" role="status"></p>
     <textarea class="copyarea" id="copyArea" readonly aria-label="コピー用の文章"></textarea>
@@ -293,6 +310,10 @@ body.zlock{overflow:hidden}
 
   <section id="panelPair" class="panel" role="tabpanel" hidden>
     <form class="form" id="pairForm" autocomplete="off" onsubmit="return false">
+      <div class="pickp" id="pickWrap1" hidden>
+        <label for="ps1">保存した人から選ぶ（ひとり目）</label>
+        <select id="ps1" aria-label="保存した人から選ぶ（ひとり目）"></select>
+      </div>
       <h2>ひとり目</h2>
       <label for="pn1">お名前・ニックネーム（なくてもOK）</label>
       <input type="text" id="pn1" maxlength="12" placeholder="例：たいき">
@@ -303,6 +324,10 @@ body.zlock{overflow:hidden}
         <select id="pd1" aria-label="ひとり目の日"></select>
       </div>
       <hr class="rule">
+      <div class="pickp" id="pickWrap2" hidden>
+        <label for="ps2">保存した人から選ぶ（ふたり目）</label>
+        <select id="ps2" aria-label="保存した人から選ぶ（ふたり目）"></select>
+      </div>
       <h2>ふたり目</h2>
       <label for="pn2">お名前・ニックネーム（なくてもOK）</label>
       <input type="text" id="pn2" maxlength="12" placeholder="例：みさき">
@@ -334,12 +359,17 @@ body.zlock{overflow:hidden}
     <div id="zukanBox"></div>
   </section>
 
+  <section id="panelPeople" class="panel" role="tabpanel" hidden>
+    <div class="hintcard" style="margin:0 0 14px"><p style="margin:0">ここに保存した内容は、このスマホの中だけにあります。お店やほかの人には見えません。</p></div>
+    <div id="peopleBox"></div>
+  </section>
+
 
   <div class="foot">
     <p class="orn">✦</p>
     <p>エンターテインメントとしてお楽しみください。</p>
     <p>点数は、四柱推命の考え方にもとづいて計算したものです。占いなので、科学的な裏づけがあるものではありません。</p>
-    <p>入力した内容は、この端末の中で計算するだけで、どこにも送信・保存しません。</p>
+    <p>入力した内容は、この端末の中で計算するだけで、どこにも送信しません。『この端末に保存』した内容は、このスマホの中だけに残ります（ブラウザのデータを消すと消えます）。</p>
     <p>文字の書体（フォント）は Google Fonts から読み込みます。このとき、入力した内容は送られません。</p>
     <div class="a2hs">
       <h2>ホーム画面に追加する方法</h2>
@@ -1102,24 +1132,28 @@ function showSolo(isSample){
     var v = $('tm').value;
     if (v && /^\d{1,2}:\d{2}$/.test(v)) hh = parseInt(v.split(':')[0], 10);
   }
+  var ts = null;
+  if (!$('unk').checked){ var v2 = $('tm').value; if (v2 && /^\d{1,2}:\d{2}$/.test(v2)) ts = v2; }
   var nm = $('nm').value.trim();
   var r = buildSolo(nm, dt.y, dt.m, dt.d, hh, isSample);
   $('result').innerHTML = r.html; soloText = isSample ? '' : r.text;
   $('copyMsg').textContent = ''; $('copyArea').classList.remove('show');
   cur = { name:nm, y:dt.y, m:dt.m, d:dt.d, sample:isSample };
-  lastSolo = { name:nm, y:dt.y, m:dt.m, d:dt.d, hh:hh, charIndex:calcPillars(dt.y, dt.m, dt.d, null).day.s, sample:isSample, saved:false };
+  lastSolo = { name:nm, y:dt.y, m:dt.m, d:dt.d, hh:hh, t:ts, charIndex:calcPillars(dt.y, dt.m, dt.d, null).day.s, sample:isSample, saved:false };
   renderLuck();
+  updateSaveBox();
   return r;
 }
 
 function setTab(name){
-  var map = { char:['tabChar','panelChar'], luck:['tabLuck','panelLuck'], pair:['tabPair','panelPair'], karte:['tabKarte','panelKarte'], zukan:['tabZukan','panelZukan'] };
+  var map = { char:['tabChar','panelChar'], luck:['tabLuck','panelLuck'], pair:['tabPair','panelPair'], karte:['tabKarte','panelKarte'], zukan:['tabZukan','panelZukan'], people:['tabPeople','panelPeople'] };
   Object.keys(map).forEach(function(k){
     var on = k === name;
     $(map[k][0]).setAttribute('aria-selected', on ? 'true' : 'false');
     $(map[k][1]).hidden = !on;
   });
-  $('soloInput').hidden = (name === 'pair' || name === 'zukan');
+  $('soloInput').hidden = (name === 'pair' || name === 'zukan' || name === 'people');
+  if (name === 'people'){ peopleUI = { mode:'', id:'', msg:'' }; renderPeople(); }
   if (name === 'zukan') updateZukanMark();
   if (name === 'karte') renderKarte();
 }
@@ -1704,6 +1738,222 @@ function setupKarteSave(){
   });
 }
 
+/* =====================================================================
+   追加：この端末だけに保存（localStorage のみ。サーバーには送らない）
+   保存するのは、ニックネーム・生年月日・出生時間（入れたときだけ）・「自分」印・保存日。
+   占いの結果そのものは保存せず、開くたびに計算します。
+   ===================================================================== */
+var STORE_KEY = 'scent-uranai-people-v1', MAX_PEOPLE = 100;
+var MSG_NOSTORE = 'この端末では保存できません';
+var storeBroken = false;
+var peopleUI = { mode:'', id:'', msg:'' };
+
+function cleanPerson(p){
+  if (!p || typeof p !== 'object') return null;
+  var y = p.y, m = p.m, d = p.d;
+  if (typeof y !== 'number' || typeof m !== 'number' || typeof d !== 'number') return null;
+  if (y % 1 || m % 1 || d % 1 || y < 1920 || y > new Date().getFullYear() || m < 1 || m > 12 || d < 1 || d > daysIn(y, m)) return null;
+  var name = typeof p.name === 'string' ? p.name.trim().slice(0, 12) : '';
+  if (!name) return null;
+  var t = (typeof p.t === 'string' && /^\d{1,2}:\d{2}$/.test(p.t)) ? p.t : null;
+  return {
+    id: (typeof p.id === 'string' && p.id) ? p.id.slice(0, 40) : newId(),
+    name: name, y: y, m: m, d: d, t: t, me: p.me === true,
+    saved: typeof p.saved === 'string' ? p.saved.slice(0, 10) : ''
+  };
+}
+function newId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+// 読み込み。使えない端末では storeBroken を立てて空の一覧を返す
+function storeRead(){
+  var raw = null, a, out = [], i, one, hasMe = false;
+  try { raw = window.localStorage.getItem(STORE_KEY); storeBroken = false; }
+  catch (e) { storeBroken = true; return []; }
+  if (!raw) return [];
+  try { a = JSON.parse(raw); } catch (e2) { return []; }
+  if (!Array.isArray(a)) return [];
+  for (i = 0; i < a.length && out.length < MAX_PEOPLE; i++){
+    one = cleanPerson(a[i]);
+    if (!one) continue;
+    if (one.me){ if (hasMe) one.me = false; hasMe = true; }
+    out.push(one);
+  }
+  return out;
+}
+function storeWrite(list){
+  try { window.localStorage.setItem(STORE_KEY, JSON.stringify(list)); storeBroken = false; return true; }
+  catch (e) { storeBroken = true; return false; }
+}
+function storeClear(){
+  try { window.localStorage.removeItem(STORE_KEY); storeBroken = false; return true; }
+  catch (e) { storeBroken = true; return false; }
+}
+function todayStr(){ var t = todayParts(); return t.y + '-' + pad2(t.m) + '-' + pad2(t.d); }
+function charOf(p){ return CHARS[calcPillars(p.y, p.m, p.d, null).day.s]; }
+function dateText(p){ return p.y + '年' + p.m + '月' + p.d + '日'; }
+
+function setDateSel(yId, mId, dId, y, m, d){
+  $(yId).value = y; $(mId).value = m;
+  $(mId).dispatchEvent(new Event('change'));
+  $(dId).value = d;
+}
+// 保存した人を入力欄に入れて、性格の結果を出す
+function loadPerson(p){
+  $('nm').value = p.name;
+  setDateSel('yr', 'mo', 'dy', p.y, p.m, p.d);
+  if (p.t){ $('unk').checked = false; $('timeBox').hidden = false; $('tm').value = p.t; }
+  else { $('unk').checked = true; $('timeBox').hidden = true; }
+  showSolo(false);
+  luckDate = null;
+  renderLuck();
+  if (!$('panelKarte').hidden) renderKarte();
+}
+
+// 性格の結果の下の保存ボックス
+function updateSaveBox(){
+  var box = $('saveBox');
+  if (!lastSolo || lastSolo.sample){ box.hidden = true; return; }
+  box.hidden = false;
+  $('svName').value = (lastSolo.name || '').slice(0, 12);
+  var mine = false;
+  storeRead().forEach(function(p){
+    if (p.me && p.y === lastSolo.y && p.m === lastSolo.m && p.d === lastSolo.d) mine = true;
+  });
+  $('svSelf').checked = mine;
+  $('svMsg').textContent = '';
+}
+function onSavePerson(){
+  var msg = $('svMsg');
+  if (!lastSolo || lastSolo.sample){ msg.textContent = '先に生年月日を入れて「占う」を押してください。'; return; }
+  var nick = $('svName').value.trim().slice(0, 12);
+  if (!nick){ msg.textContent = 'ニックネームを入れてください。'; return; }
+  var list = storeRead();
+  if (storeBroken){ msg.textContent = MSG_NOSTORE; return; }
+  var me = $('svSelf').checked, hit = -1, i;
+  for (i = 0; i < list.length; i++){
+    var q = list[i];
+    if (q.name === nick && q.y === lastSolo.y && q.m === lastSolo.m && q.d === lastSolo.d) hit = i;
+  }
+  if (hit < 0 && list.length >= MAX_PEOPLE){ msg.textContent = '保存できるのは' + MAX_PEOPLE + '人までです'; return; }
+  if (me) list.forEach(function(p){ p.me = false; });
+  var rec = { id: hit >= 0 ? list[hit].id : newId(), name: nick, y: lastSolo.y, m: lastSolo.m, d: lastSolo.d,
+              t: lastSolo.t || null, me: me, saved: todayStr() };
+  if (hit >= 0) list[hit] = rec; else list.push(rec);
+  if (!storeWrite(list)){ msg.textContent = MSG_NOSTORE; return; }
+  msg.textContent = 'この端末に保存しました';
+  refreshPairSelects();
+}
+
+// 「保存した人」タブ
+function renderPeople(){
+  var box = $('peopleBox'), list = storeRead(), h = '', i;
+  if (storeBroken){ box.innerHTML = '<div class="card"><p style="margin:0">' + esc(MSG_NOSTORE) + '</p></div>'; return; }
+  if (!list.length){
+    box.innerHTML = '<div class="card"><p style="margin:0">まだ保存した人はいません。占ったあと『この端末に保存』から追加できます</p></div>'
+      + (peopleUI.msg ? '<p class="msg" role="status">' + esc(peopleUI.msg) + '</p>' : '');
+    return;
+  }
+  for (i = 0; i < list.length; i++){
+    var p = list[i], ch = charOf(p), mine = (peopleUI.id === p.id);
+    h += '<div class="crow" data-id="' + esc(p.id) + '"><p class="cn">' + esc(p.name) + (p.me ? '<span class="selfmark">自分</span>' : '') + '</p>'
+      + '<p class="small">' + dateText(p) + '生まれ' + (p.t ? '（' + esc(p.t) + '）' : '') + '</p>'
+      + '<p>' + esc(ch.name) + '</p>';
+    if (mine && peopleUI.mode === 'rename'){
+      h += '<label for="renameInput" style="margin-top:8px">新しいニックネーム（12字まで）</label>'
+        + '<input type="text" id="renameInput" class="rn" maxlength="12" value="' + esc(p.name) + '">'
+        + '<button type="button" class="btn mini" data-act="renameOk">変更する</button>'
+        + '<button type="button" class="btn mini sub" data-act="cancel">やめる</button>';
+    } else if (mine && peopleUI.mode === 'del'){
+      h += '<div class="delbox" role="alert"><p style="margin:0 0 4px">「' + esc(p.name) + '」を削除します。元に戻せません。よろしいですか？</p>'
+        + '<button type="button" class="btn mini danger" data-act="delOk">削除する</button>'
+        + '<button type="button" class="btn mini sub" data-act="cancel">やめる</button></div>';
+    } else {
+      h += '<button type="button" class="btn mini" data-act="uranau">占う</button>'
+        + '<button type="button" class="btn mini sub" data-act="rename">名前を変える</button>'
+        + '<button type="button" class="btn mini danger" data-act="del">削除</button>';
+    }
+    h += '</div>';
+  }
+  h += '<p class="small" style="margin:0 0 6px">保存：' + list.length + '人（' + MAX_PEOPLE + '人まで）</p>';
+  if (peopleUI.mode === 'delAll'){
+    h += '<div class="delbox" role="alert"><p style="margin:0 0 4px">保存した ' + list.length + ' 人をすべて削除します。元に戻せません。よろしいですか？</p>'
+      + '<button type="button" class="btn mini danger" data-act="delAllOk">すべて削除する</button>'
+      + '<button type="button" class="btn mini sub" data-act="cancel">やめる</button></div>';
+  } else {
+    h += '<button type="button" class="btn danger" data-act="delAll">すべて削除</button>';
+  }
+  h += '<p class="msg" role="status">' + esc(peopleUI.msg || '') + '</p>';
+  box.innerHTML = h;
+  if (peopleUI.mode === 'rename' && $('renameInput')) $('renameInput').focus();
+}
+function onPeopleClick(ev){
+  var b = ev.target.closest ? ev.target.closest('button[data-act]') : null;
+  if (!b) return;
+  var act = b.getAttribute('data-act'), row = b.closest('.crow'), id = row ? row.getAttribute('data-id') : '';
+  var list, i, idx = -1;
+  if (act === 'cancel'){ peopleUI = { mode:'', id:'', msg:'' }; renderPeople(); return; }
+  if (act === 'rename' || act === 'del'){ peopleUI = { mode:act, id:id, msg:'' }; renderPeople(); return; }
+  if (act === 'delAll'){ peopleUI = { mode:'delAll', id:'', msg:'' }; renderPeople(); return; }
+  list = storeRead();
+  for (i = 0; i < list.length; i++) if (list[i].id === id) idx = i;
+  if (act === 'uranau'){
+    if (idx < 0) return;
+    loadPerson(list[idx]);
+    setTab('char');
+    $('result').scrollIntoView({ behavior: smooth(), block:'start' });
+    return;
+  }
+  if (act === 'renameOk'){
+    var nn = ($('renameInput').value || '').trim().slice(0, 12);
+    if (!nn){ peopleUI.msg = 'ニックネームを入れてください。'; renderPeople(); return; }
+    if (idx >= 0){
+      list[idx].name = nn;
+      peopleUI = { mode:'', id:'', msg: storeWrite(list) ? '名前を変えました' : MSG_NOSTORE };
+    } else peopleUI = { mode:'', id:'', msg:'' };
+    renderPeople(); refreshPairSelects(); return;
+  }
+  if (act === 'delOk'){
+    if (idx >= 0){
+      list.splice(idx, 1);
+      peopleUI = { mode:'', id:'', msg: storeWrite(list) ? '削除しました' : MSG_NOSTORE };
+    } else peopleUI = { mode:'', id:'', msg:'' };
+    renderPeople(); refreshPairSelects(); return;
+  }
+  if (act === 'delAllOk'){
+    peopleUI = { mode:'', id:'', msg: storeClear() ? 'すべて削除しました' : MSG_NOSTORE };
+    renderPeople(); refreshPairSelects(); return;
+  }
+}
+
+// 相性タブ：保存した人から選ぶ
+function refreshPairSelects(){
+  var list = storeRead(), i, h;
+  [1, 2].forEach(function(n){
+    var sel = $('ps' + n), wrap = $('pickWrap' + n);
+    if (!list.length){ wrap.hidden = true; sel.innerHTML = ''; return; }
+    h = '<option value="">選んでください</option>';
+    for (i = 0; i < list.length; i++){
+      h += '<option value="' + esc(list[i].id) + '">' + esc(list[i].name) + '（' + dateText(list[i]) + '）' + (list[i].me ? ' 自分' : '') + '</option>';
+    }
+    sel.innerHTML = h; wrap.hidden = false;
+  });
+}
+function onPairPick(n){
+  var id = $('ps' + n).value;
+  if (!id) return;
+  var list = storeRead(), p = null, i;
+  for (i = 0; i < list.length; i++) if (list[i].id === id) p = list[i];
+  if (!p) return;
+  $('pn' + n).value = p.name;
+  setDateSel('py' + n, 'pm' + n, 'pd' + n, p.y, p.m, p.d);
+  if ($('ps1').value && $('ps2').value) runPair();
+}
+function runPair(){
+  var a = readDate('py1','pm1','pd1'), b = readDate('py2','pm2','pd2');
+  var r = buildPair($('pn1').value.trim(), a, $('pn2').value.trim(), b, false);
+  $('pairResult').innerHTML = r.html; pairText = r.text; $('copyMsg2').textContent = ''; $('copyArea2').classList.remove('show');
+  $('pairResult').scrollIntoView({ behavior: smooth(), block:'start' });
+}
+
 function registerSW(){
   if (!('serviceWorker' in navigator)) return;
   var ok = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -1727,12 +1977,12 @@ function init(){
     if (!$('panelKarte').hidden) renderKarte();
     (!$('panelKarte').hidden ? $('karteBody') : $('result')).scrollIntoView({ behavior: smooth(), block:'start' });
   });
-  $('goPair').addEventListener('click', function(){
-    var a = readDate('py1','pm1','pd1'), b = readDate('py2','pm2','pd2');
-    var r = buildPair($('pn1').value.trim(), a, $('pn2').value.trim(), b, false);
-    $('pairResult').innerHTML = r.html; pairText = r.text; $('copyMsg2').textContent = ''; $('copyArea2').classList.remove('show');
-    $('pairResult').scrollIntoView({ behavior: smooth(), block:'start' });
-  });
+  $('goPair').addEventListener('click', runPair);
+  $('svBtn').addEventListener('click', onSavePerson);
+  $('peopleBox').addEventListener('click', onPeopleClick);
+  $('tabPeople').addEventListener('click', function(){ setTab('people'); });
+  $('ps1').addEventListener('change', function(){ onPairPick(1); });
+  $('ps2').addEventListener('change', function(){ onPairPick(2); });
   setupCopy('copyBtn','copyMsg','copyArea', function(){ return soloText; });
   setupCopy('copyBtn2','copyMsg2','copyArea2', function(){ return pairText; });
   $('tabChar').addEventListener('click', function(){ setTab('char'); });
@@ -1747,8 +1997,11 @@ function init(){
   $('lkYear').addEventListener('click', function(){ setLuckMode('year'); });
   $('lkLife').addEventListener('click', function(){ setLuckMode('life'); });
 
-  // 最初の画面：例（1995年5月20日生まれ）を表示
-  showSolo(true);
+  // 最初の画面：「自分」が保存されていれば自分の結果、なければ例（1995年5月20日生まれ）を表示
+  var meP = null;
+  storeRead().forEach(function(p){ if (p.me) meP = p; });
+  refreshPairSelects();
+  if (meP) loadPerson(meP); else showSolo(true);
   $('pairResult').innerHTML = buildPair('', {y:1995,m:5,d:20}, '', {y:1998,m:11,d:3}, true).html;
   registerSW();
 }
