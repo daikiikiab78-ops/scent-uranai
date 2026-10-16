@@ -266,6 +266,17 @@ body.zlock{overflow:hidden}
 .gate .form{text-align:left;margin-top:20px}
 .gate-msg{min-height:1.85em;margin:8px 0 0;font-size:14px;color:#8a3b1f}
 .gate-note{font-size:12.5px;color:#4b5a76;margin:18px 0 0}
+/* オーナー用：QRを見せる（この端末にだけ画像を保存） */
+.ownerlink{display:block;margin:14px auto 0;padding:10px 12px;background:none;border:0;font:inherit;font-size:11px;color:#6b7893;text-decoration:underline;cursor:pointer}
+.odlg{position:fixed;inset:0;z-index:200;background:#FDF9EF;overflow:auto;display:flex;flex-direction:column;align-items:center;padding:calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom))}
+.odlg[hidden]{display:none}
+.odlg h2{font-family:"Shippori Mincho",serif;font-size:18px;margin:4px 0 12px;text-align:center}
+.oin{width:100%;max-width:480px}
+.oqr{display:block;width:100%;max-width:min(92vw,70vh);height:auto;margin:0 auto;background:#fff;padding:8px;border:1px solid #D69C1C;image-rendering:pixelated}
+.omsg{min-height:1.6em;font-size:14px;color:#8a3b1f;margin:8px 0 0;text-align:center}
+.osmall{font-size:12.5px;color:#4b5a76;line-height:1.7;margin:10px 0 0}
+.otiny{display:block;margin:14px auto 0;padding:10px 12px;background:none;border:0;font:inherit;font-size:12px;color:#6b7893;text-decoration:underline;cursor:pointer}
+.ofile{display:block;width:100%;margin:12px 0 0;font:inherit;font-size:15px}
 </style>
 </head>
 <body>
@@ -419,6 +430,30 @@ body.zlock{overflow:hidden}
       <h2>ホーム画面に追加する方法</h2>
       <p><b>iPhone：</b>Safariで開き、下の共有ボタン（四角から矢印が出たマーク）をタップして、「ホーム画面に追加」を選びます。</p>
       <p><b>Android：</b>Chromeで開き、右上のメニュー（点が3つ）から「ホーム画面に追加」または「アプリをインストール」を選びます。</p>
+    </div>
+    <button type="button" class="ownerlink" id="ownerLink">オーナー用</button>
+  </div>
+</div>
+
+<div class="odlg" id="ownerDlg" role="dialog" aria-modal="true" aria-labelledby="ownerTitle" hidden>
+  <div class="oin">
+    <h2 id="ownerTitle">オーナー用：QRを見せる</h2>
+    <div id="ownerImport" hidden>
+      <p>この端末に、人に見せるQRコードの画像を取り込みます。</p>
+      <input type="file" accept="image/*" class="ofile" id="ownerFile" aria-label="QRコードの画像を選ぶ">
+      <p class="osmall">取り込んだ画像は、この端末の中だけに保存されます。人のスマホでは取り込まないでください。</p>
+    </div>
+    <div id="ownerShow" hidden>
+      <img class="oqr" id="ownerImg" alt="人に見せるQRコード">
+      <p class="osmall" style="text-align:center">読みとりにくいときは、画面を明るくしてください。</p>
+    </div>
+    <p class="omsg" id="ownerMsg" role="alert" aria-live="polite"></p>
+    <button type="button" class="btn" id="ownerClose">閉じる</button>
+    <button type="button" class="otiny" id="ownerDel" hidden>画像を消す</button>
+    <div id="ownerConfirm" hidden style="text-align:center;margin-top:10px">
+      <p class="osmall">この端末に保存したQR画像を消します。よろしいですか？（元の画像は写真アプリにあれば、また取り込めます）</p>
+      <button type="button" class="btn mini danger" id="ownerDelYes">消す</button>
+      <button type="button" class="btn mini sub" id="ownerDelNo">やめる</button>
     </div>
   </div>
 </div>
@@ -2253,6 +2288,116 @@ function init(){
 
   if (/^#k=/.test(location.hash || '')) handleHash();
   else if (noCrypto()) showNoCrypto();
+})();
+
+/* =====================================================================
+   オーナー用：QRを見せる
+   アプリにQRや合言葉は入っていない。オーナーが自分の端末で画像を1回取り込むと、
+   その端末の localStorage にだけ保存され、以後その端末で表示できる。
+   画像データは、ログ・コンソール・アドレスには出さない。
+   ===================================================================== */
+(function(){
+  var KEY = 'scent-uranai-owner-qr-v1';
+  var MAX_SIDE = 1200;
+  function $(id){ return document.getElementById(id); }
+  var dlg = $('ownerDlg'), link = $('ownerLink');
+  if (!dlg || !link) return;
+  var tabBtn = null, lastFocus = null;
+
+  function read(){ try { var v = localStorage.getItem(KEY); return (v && v.indexOf('data:image/') === 0) ? v : null; } catch (e) { return null; } }
+  function write(v){ try { localStorage.setItem(KEY, v); return localStorage.getItem(KEY) === v; } catch (e) { return false; } }
+  function remove(){ try { localStorage.removeItem(KEY); } catch (e) {} }
+  function msg(t){ $('ownerMsg').textContent = t || ''; }
+
+  function syncTab(){
+    var has = !!read();
+    if (has && !tabBtn) {
+      tabBtn = document.createElement('button');
+      tabBtn.type = 'button';
+      tabBtn.id = 'tabOwnerQr';
+      tabBtn.textContent = 'QRを見せる';
+      tabBtn.addEventListener('click', openDlg);
+      var tabs = document.querySelector('.tabs.main');
+      if (tabs) tabs.appendChild(tabBtn);
+    } else if (!has && tabBtn) {
+      if (tabBtn.parentNode) tabBtn.parentNode.removeChild(tabBtn);
+      tabBtn = null;
+    }
+  }
+  function render(){
+    var v = read();
+    $('ownerConfirm').hidden = true;
+    if (v) {
+      $('ownerImg').src = v;
+      $('ownerShow').hidden = false; $('ownerImport').hidden = true; $('ownerDel').hidden = false;
+    } else {
+      $('ownerImg').removeAttribute('src');
+      $('ownerShow').hidden = true; $('ownerImport').hidden = false; $('ownerDel').hidden = true;
+    }
+    syncTab();
+  }
+  function openDlg(){
+    if (document.getElementById('appWrap').hidden) return; // 合言葉ゲートの後だけ
+    lastFocus = document.activeElement;
+    msg(''); render();
+    dlg.hidden = false;
+    $('ownerClose').focus();
+  }
+  function closeDlg(){
+    dlg.hidden = true;
+    $('ownerImg').removeAttribute('src');
+    msg('');
+    if (lastFocus && lastFocus.focus && document.body.contains(lastFocus)) lastFocus.focus();
+  }
+  function fail(){ msg('この端末には保存できませんでした'); }
+
+  function handleFile(file){
+    if (!file) return;
+    msg('');
+    var fr = new FileReader();
+    fr.onerror = function(){ msg('画像を読みこめませんでした'); };
+    fr.onload = function(){
+      var img = new Image();
+      img.onerror = function(){ msg('画像を読みこめませんでした'); };
+      img.onload = function(){
+        try {
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (!w || !h) { msg('画像を読みこめませんでした'); return; }
+          var sc = Math.min(1, MAX_SIDE / Math.max(w, h));
+          var cw = Math.max(1, Math.round(w * sc)), ch = Math.max(1, Math.round(h * sc));
+          var cv = document.createElement('canvas');
+          cv.width = cw; cv.height = ch;
+          var cx = cv.getContext('2d');
+          cx.fillStyle = '#fff'; cx.fillRect(0, 0, cw, ch);
+          cx.imageSmoothingEnabled = (sc < 1);
+          cx.drawImage(img, 0, 0, cw, ch);
+          var url = cv.toDataURL('image/png');
+          if (!write(url)) { fail(); return; }
+          render();
+        } catch (e) { fail(); }
+      };
+      img.src = fr.result;
+    };
+    fr.readAsDataURL(file);
+  }
+
+  link.addEventListener('click', openDlg);
+  $('ownerClose').addEventListener('click', closeDlg);
+  $('ownerFile').addEventListener('change', function(ev){
+    var f = ev.target.files && ev.target.files[0];
+    handleFile(f);
+    ev.target.value = '';
+  });
+  $('ownerDel').addEventListener('click', function(){ $('ownerConfirm').hidden = false; $('ownerDel').hidden = true; });
+  $('ownerDelNo').addEventListener('click', function(){ $('ownerConfirm').hidden = true; $('ownerDel').hidden = false; });
+  $('ownerDelYes').addEventListener('click', function(){ remove(); msg(''); render(); });
+  document.addEventListener('keydown', function(ev){ if (ev.key === 'Escape' && !dlg.hidden) closeDlg(); });
+
+  // 解錠後に本体が表示されたら、保存済みの端末だけタブを出す
+  var wrapEl = $('appWrap');
+  function sync(){ if (!wrapEl.hidden) syncTab(); }
+  if (window.MutationObserver) new MutationObserver(sync).observe(wrapEl, {attributes:true, attributeFilter:['hidden']});
+  sync();
 })();
 </script>
 </body>
