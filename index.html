@@ -1,0 +1,1758 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SCENT 生まれ日占い</title>
+<meta name="description" content="生まれた日から、あなたの「らしさ」とふたりの相性をのぞく、SCENTのオリジナル占いです。">
+<meta name="theme-color" content="#253A5E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="SCENT占い">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:wght@400;600&family=Shippori+Mincho:wght@400;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:light;
+  --gold:#D69C1C; --ivory:#FDF9EF; --navy:#253A5E;
+  --navy-soft:#5a6a86; --line:rgba(214,156,28,.55); --card:#FFFDF6;
+}
+*{box-sizing:border-box}
+html{background:#FDF9EF;color:#253A5E}
+body{margin:0;background:#FDF9EF;color:#253A5E;font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN",sans-serif;font-size:16px;line-height:1.85;overflow-wrap:anywhere;-webkit-text-size-adjust:100%}
+.wrap{max-width:720px;margin:0 auto;padding:40px 16px 56px}
+header{text-align:center;padding:8px 0 24px}
+.en{font-family:"Bodoni Moda","Didot",serif;letter-spacing:.28em;color:#D69C1C;font-size:13px;margin:0}
+h1{font-family:"Shippori Mincho",serif;font-weight:600;font-size:26px;margin:8px 0 6px;letter-spacing:.12em;color:#253A5E}
+.orn{color:#D69C1C;letter-spacing:.6em;font-size:14px;margin:6px 0}
+.lead{font-size:14px;color:#253A5E;margin:8px 0 0}
+.rule{border:0;border-top:1px solid var(--line);margin:20px 0}
+.tabs{display:flex;gap:8px;margin:0 0 16px}
+.tabs button{flex:1;min-height:48px;font:inherit;font-family:"Shippori Mincho",serif;font-weight:600;background:#FDF9EF;color:#253A5E;border:1px solid #D69C1C;border-radius:2px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:#253A5E;color:#FDF9EF;border-color:#253A5E}
+.panel[hidden],#soloInput[hidden]{display:none}
+.tabs.sub button{min-height:44px;font-size:14px}
+.stars{color:#D69C1C;letter-spacing:.1em;font-size:20px}
+.meter{height:8px;background:#efe4c6;border:1px solid #D69C1C;margin:6px 0 10px}
+.meter i{display:block;height:100%;background:#D69C1C}
+.ftitle{font-family:"Shippori Mincho",serif;font-weight:600;font-size:20px;margin:2px 0;color:#253A5E}
+.nav{display:grid;grid-template-columns:auto 1fr auto auto;gap:6px;margin:0 0 14px;align-items:center}
+.nav button{min-height:48px;padding:0 12px;font:inherit;font-size:14px;color:#253A5E;background:#FDF9EF;border:1px solid #D69C1C;border-radius:2px;cursor:pointer}
+.nav input{min-width:0;width:100%;min-height:48px;font:inherit;font-size:16px;color:#253A5E;background:#FDF9EF;border:1px solid #b9a77a;border-radius:2px;padding:4px 8px}
+.chart{display:block;width:100%;height:auto;margin:6px auto}
+.hintcard{background:#FDF3D6;border:1px dashed #D69C1C;padding:14px 16px;margin:14px 0 0;font-size:14px}
+.hintcard h3{font-size:15px;margin:0 0 4px}
+.form{background:var(--card);border:1px solid var(--line);padding:20px 16px;margin-bottom:16px}
+.form h2{font-family:"Shippori Mincho",serif;font-size:17px;margin:0 0 10px;font-weight:600;color:#253A5E}
+label{display:block;font-size:14px;margin:12px 0 4px;color:#253A5E}
+input[type=text],input[type=time],select{width:100%;min-height:48px;font:inherit;font-size:16px;color:#253A5E;background:#FDF9EF;border:1px solid #b9a77a;border-radius:2px;padding:6px 10px}
+.row{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:8px}
+.chk{display:flex;align-items:center;gap:10px;margin:14px 0 4px;font-size:15px;color:#253A5E}
+.chk input{width:22px;height:22px;accent-color:#253A5E}
+.hint{font-size:12.5px;color:#4b5a76;margin:4px 0 0}
+.btn{display:block;width:100%;min-height:52px;margin-top:18px;font-family:"Shippori Mincho",serif;font-weight:600;font-size:17px;letter-spacing:.2em;color:#FDF9EF;background:#253A5E;border:1px solid #253A5E;border-radius:2px;cursor:pointer;transition:background .2s}
+.btn:hover{background:#1b2c49}
+.btn.sub{background:#FDF9EF;color:#253A5E;border-color:#D69C1C;letter-spacing:.1em;font-size:15px}
+.msg{color:#8a4b1e;font-size:14px;min-height:1.2em;margin:8px 0 0}
+.sample{display:inline-block;border:1px solid #D69C1C;color:#253A5E;background:#FDF3D6;font-size:13px;padding:2px 12px;margin:0 0 12px}
+.card{background:var(--card);border:1px solid var(--line);padding:20px 16px;margin:0 0 14px;position:relative}
+.card h3{font-family:"Shippori Mincho",serif;font-size:17px;font-weight:600;margin:0 0 8px;color:#253A5E}
+.card h3::before{content:"✦ ";color:#D69C1C;font-size:13px}
+.card p{margin:0 0 8px}
+.lovedeco{text-align:center;color:#D69C1C;letter-spacing:.3em;margin:0 0 4px}
+.lheart{width:18px;height:16px;vertical-align:-2px}
+.lovenote{margin:0 0 6px}
+.lovecard h3::before{content:"♡ "}
+.hero{text-align:center}
+.hero svg{width:min(60vw,200px);height:auto}
+.who{font-family:"Shippori Mincho",serif;color:#253A5E;font-size:14px;margin:0}
+.cname{font-family:"Shippori Mincho",serif;font-weight:600;font-size:22px;line-height:1.5;margin:4px 0}
+.catch{color:#8a6410;font-family:"Shippori Mincho",serif;margin:0 0 12px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:8px 0}
+.tag{border:1px solid #D69C1C;padding:0 10px;font-size:13px;color:#253A5E}
+.hero .body{text-align:left}
+ul.pts{margin:0;padding-left:1.3em}
+ul.pts li::marker{color:#D69C1C}
+.sw{display:inline-block;width:14px;height:14px;border:1px solid #253A5E;vertical-align:-2px;margin-right:6px}
+table.pl{width:100%;border-collapse:collapse;text-align:center;font-family:"Shippori Mincho",serif}
+table.pl th{font-weight:400;font-size:12px;color:#4b5a76;border-bottom:1px solid var(--line);padding:2px}
+table.pl td{font-size:20px;padding:4px 2px;border-bottom:1px solid rgba(214,156,28,.25)}
+details{margin-top:6px}
+summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-family:"Shippori Mincho",serif;font-weight:600}
+.small{font-size:12.5px;color:#4b5a76}
+.radar{display:block;margin:0 auto;width:100%;max-width:300px;height:auto}
+.score{text-align:center}
+.score .num{font-family:"Bodoni Moda",serif;font-size:56px;line-height:1.1;color:#D69C1C}
+.score .unit{font-family:"Shippori Mincho",serif;font-size:18px}
+.pair{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;text-align:center}
+.pair svg{width:100%;max-width:130px;height:auto}
+.pair .x{color:#D69C1C;font-size:22px}
+.copyarea{display:none;width:100%;min-height:140px;margin-top:10px;font:inherit;font-size:14px;color:#253A5E;background:#FDF9EF;border:1px solid #b9a77a;padding:8px}
+.copyarea.show{display:block}
+.note{margin-top:34px;text-align:center;font-size:12px;color:#4b5a76}
+svg .n{fill:none;stroke:#253A5E;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+svg .g{fill:none;stroke:#D69C1C;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+svg .gf{fill:#D69C1C;stroke:#D69C1C;stroke-width:1.5;stroke-linejoin:round}
+svg .nf{fill:#253A5E;stroke:#253A5E;stroke-width:1}
+svg .iv{fill:#FDF9EF;stroke:#253A5E;stroke-width:2.5;stroke-linejoin:round}
+.tabs button#tabList{flex:1.7;font-size:13px;line-height:1.4;padding:4px 6px}
+textarea.ta{display:block;width:100%;min-height:96px;font:inherit;font-size:16px;color:#253A5E;background:#FDF9EF;border:1px solid #b9a77a;border-radius:2px;padding:8px 10px;resize:vertical}
+.consent{background:#FDF3D6;border:1px dashed #D69C1C;padding:12px 14px;margin:12px 0 0;font-size:14px}
+.consent p{margin:0 0 4px}
+.consent p:last-child{margin:0}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.mini{display:inline-block;width:auto;min-height:44px;margin:6px 6px 0 0;padding:0 14px;font-size:14px;letter-spacing:.06em}
+.btn.danger{background:#FDF9EF;color:#8a4b1e;border-color:#8a4b1e}
+.crow{background:var(--card);border:1px solid var(--line);padding:14px 16px;margin:0 0 10px}
+.crow p{margin:0 0 2px}
+.crow .cn{font-family:"Shippori Mincho",serif;font-weight:600;font-size:18px}
+.crow .selchk{display:flex;align-items:center;gap:8px;font-size:13px;margin:0 0 6px;min-height:36px}
+.crow .selchk input{width:20px;height:20px;accent-color:#253A5E}
+.delbox{background:#FDF3D6;border:1px solid #8a4b1e;padding:10px 12px;margin-top:8px;font-size:14px}
+.bday ul{margin:0 0 8px;padding-left:1.3em}
+.bday ul li::marker{color:#D69C1C}
+.tabs.main{flex-wrap:wrap}
+.tabs.main button,.tabs.main button#tabList{flex:1 1 calc(50% - 4px);min-width:0;font-size:14px;line-height:1.4;padding:4px 6px}
+.pick{background:#FDF3D6;border:1px dashed #D69C1C;padding:14px 16px;margin:0 0 16px}
+.pick h2{font-family:"Shippori Mincho",serif;font-size:16px;margin:0 0 4px;font-weight:600}
+.rankbox{margin:0 0 14px}
+.rankbox .rhead{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rrow{background:var(--card);border:1px solid var(--line);padding:10px 14px;margin:0 0 8px}
+.rrow.top{border:2px solid #D69C1C;background:#FDF3D6}
+.rrow .rn{font-family:"Shippori Mincho",serif;font-weight:600;font-size:16px;margin:0}
+.rrow .rs{font-family:"Bodoni Moda",serif;font-size:24px;color:#8a6410}
+.rrow .badge,.zbadge{display:inline-block;background:#253A5E;color:#FDF9EF;font-size:12px;padding:0 10px;margin-left:6px}
+.zlead{text-align:center;margin:0 0 10px;font-size:14px;line-height:1.7}
+.zgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.zgrid .zbtn:last-child{grid-column:2}
+.zbtn{position:relative;display:flex;flex-direction:column;align-items:center;min-height:132px;padding:6px 4px 6px;font:inherit;color:#253A5E;background:var(--card);border:1px solid var(--line);border-radius:2px;cursor:pointer;text-align:center;line-height:1.3}
+.zbtn:hover{background:#FDF3D6}
+.zbtn.me{border:2px solid #D69C1C;background:#FDF3D6}
+.zico{display:block;width:76px;height:76px}
+.zico svg{width:100%;height:100%;display:block}
+.zan{font-family:"Shippori Mincho",serif;font-weight:600;font-size:17px;margin-top:2px}
+.zmod{font-size:11px;color:#4b5a76;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:100%}
+.zmark{position:absolute;top:-1px;left:50%;transform:translateX(-50%);line-height:1}
+.zbadge{display:inline-block;background:#253A5E;color:#FDF9EF;font-size:11px;padding:1px 8px;margin:0}
+.zbtn:focus-visible,.zchip:focus-visible,.zdlg button:focus-visible{outline:3px solid #253A5E;outline-offset:2px}
+#zhead:focus,#zhead:focus-visible{outline:none}
+@media (min-width:600px){.zgrid{grid-template-columns:repeat(5,1fr)}.zgrid .zbtn:last-child{grid-column:auto}.zico{width:88px;height:88px}}
+.zchips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px}
+.zchip{display:inline-flex;align-items:center;gap:6px;min-height:48px;padding:2px 12px 2px 4px;font:inherit;font-size:14px;color:#253A5E;background:#FDF3D6;border:1px solid #D69C1C;border-radius:2px;cursor:pointer}
+.zci{width:40px;height:40px;display:block}
+.zci svg{width:100%;height:100%;display:block}
+body.zlock{overflow:hidden}
+.zdlg{position:fixed;inset:0;z-index:100;background:rgba(37,58,94,.55);display:flex;align-items:flex-end;justify-content:center;animation:zfade .2s ease-out}
+.zdlg[hidden]{display:none}
+.zsheet{position:relative;width:100%;max-width:560px;height:100%;max-height:100dvh;background:var(--ivory);border:1px solid #D69C1C;display:flex;flex-direction:column;animation:zrise .25s ease-out}
+@media (min-width:600px){.zdlg{align-items:center}.zsheet{height:min(90vh,820px)}}
+.zx{position:absolute;top:6px;right:6px;z-index:2;width:48px;height:48px;font:inherit;font-size:26px;line-height:1;color:#253A5E;background:#FDF9EF;border:1px solid #D69C1C;border-radius:2px;cursor:pointer}
+.zscroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:16px 18px 12px}
+.zbody h3{font-family:"Shippori Mincho",serif;font-size:17px;font-weight:600;margin:16px 0 6px;color:#253A5E;border-top:1px solid var(--line);padding-top:12px}
+.zbody h3::before{content:"✦ ";color:#D69C1C;font-size:13px}
+.zbody p{margin:0 0 8px}
+.zhero{text-align:center}
+.zhero svg{width:min(52vw,190px);height:auto}
+.zname{font-family:"Shippori Mincho",serif;font-weight:600;font-size:20px;line-height:1.5;margin:4px 0;text-align:center;text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere}
+.zyou{text-align:center;margin:0}
+.zfoot{display:flex;align-items:center;gap:8px;padding:8px 12px;border-top:1px solid var(--line);background:var(--card)}
+.zfoot button{flex:1;min-height:48px;font:inherit;font-size:14px;color:#253A5E;background:#FDF9EF;border:1px solid #D69C1C;border-radius:2px;cursor:pointer}
+.zfoot span{font-size:13px;color:#4b5a76;white-space:nowrap}
+@keyframes zfade{from{opacity:0}to{opacity:1}}
+@keyframes zrise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.zdlg,.zsheet{animation:none}}
+/* ---- 生まれ日カルテ ---- */
+.kt{max-width:520px;margin:0 auto 14px;border:1px solid #D69C1C;background:var(--card);padding:6px}
+.kt-in{border:1px solid rgba(214,156,28,.5);padding:22px 14px 20px}
+.kt-brand{text-align:center;margin:0 0 14px}
+.kt-brand .en{font-size:14px}
+.kt-brand h2{font-family:"Shippori Mincho",serif;font-weight:600;font-size:26px;letter-spacing:.2em;margin:2px 0 0;color:#253A5E}
+.kt-info{margin:0 0 14px;border-top:1px solid var(--line)}
+.kt-info div{display:flex;gap:12px;align-items:baseline;border-bottom:1px solid rgba(214,156,28,.3);padding:5px 2px;line-height:1.6}
+.kt-info dt{flex:0 0 5.5em;font-size:12.5px;color:#4b5a76}
+.kt-info dd{margin:0;font-family:"Shippori Mincho",serif;font-size:16px}
+.kt-hero{text-align:center;margin:0 0 12px}
+.kt-hero svg{width:min(48vw,170px);height:auto}
+.kt-score{display:flex;align-items:center;gap:12px;background:#FDF3D6;border:1px solid #D69C1C;padding:10px 14px;margin:0 0 6px}
+.kt-score .num{font-family:"Bodoni Moda",serif;font-size:46px;line-height:1.1;color:#D69C1C}
+.kt-score .num small{font-size:14px;color:#4b5a76}
+.kt-score p{margin:0;line-height:1.5}
+.kt-score .meter{margin:6px 0 4px}
+.kt-h{font-family:"Shippori Mincho",serif;font-weight:600;font-size:17px;margin:22px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--line);color:#253A5E}
+.kt-h::before{content:"✦ ";color:#D69C1C;font-size:13px}
+.kt-faces{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.kt-face{border:1px solid var(--line);background:#FFFDF6;padding:8px 8px 10px;text-align:center}
+.kt-face.none{border-style:dashed;display:flex;flex-direction:column;justify-content:center}
+.kt-face b{display:block;font-family:"Shippori Mincho",serif;font-size:14px;color:#8a6410;margin:0 0 2px}
+.kt-face svg{display:block;width:64px;height:auto;margin:0 auto 2px}
+.kt-face .nm{font-family:"Shippori Mincho",serif;font-size:13px;line-height:1.5;margin:0}
+.kt-face .ct{font-size:12px;line-height:1.6;color:#4b5a76;margin:2px 0 0}
+.kt-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.kt-two h4{font-family:"Shippori Mincho",serif;font-size:15px;margin:0 0 2px;color:#8a6410}
+.kt-two p,.kt-two ul{font-size:14.5px;line-height:1.75;margin:0}
+.kt-years{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.kt-years table{border-collapse:collapse;min-width:560px;width:100%;text-align:center;table-layout:fixed}
+.kt-years th,.kt-years td{border:1px solid rgba(214,156,28,.45);padding:4px 3px;vertical-align:top}
+.kt-years th{font-weight:400;font-size:12px;color:#4b5a76;background:#FDF9EF}
+.kt-years td.sc{font-family:"Bodoni Moda",serif;font-size:22px;color:#253A5E}
+.kt-years td.th{font-size:12px;line-height:1.5;text-align:center}
+.kt-years .now{background:#FDF3D6;border:2px solid #D69C1C;font-weight:700}
+.kt-years td.sc.now{color:#8a6410}
+.kt-scroll{display:none;font-size:11.5px;color:#4b5a76;margin:4px 0 0}
+.kt-match{display:flex;flex-wrap:wrap;gap:8px}
+.kt-match div{flex:1 1 30%;min-width:92px;text-align:center;font-size:12.5px;line-height:1.5}
+.kt-match svg{display:block;width:60px;height:auto;margin:0 auto}
+.kt-match i{display:block;font-style:normal;font-size:11.5px;color:#8a6410}
+.kt-foot{text-align:center;font-size:12px;color:#4b5a76;margin:18px 0 0}
+.kt-bar{display:flex;flex-direction:column;gap:6px;max-width:520px;margin:0 auto}
+@media (max-width:560px){.kt-scroll{display:block}}
+@media (min-width:600px){
+  .wrap{padding-top:56px}
+  h1{font-size:32px}
+  .card,.form{padding:26px 28px}
+  .cname{font-size:26px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+@media (prefers-reduced-motion:no-preference){.card{animation:fadein .5s ease both}@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}}
+
+.note{line-height:1.8}
+.foot{margin-top:34px;text-align:center;font-size:12.5px;color:#4b5a76}
+.foot p{margin:0 0 8px}
+.foot .orn{margin:0 0 8px}
+.a2hs{margin:22px auto 0;max-width:520px;text-align:left;background:#FDF3D6;border:1px dashed #D69C1C;padding:12px 16px;font-size:13px;color:#253A5E;line-height:1.8}
+.a2hs h2{font-family:"Shippori Mincho",serif;font-size:14.5px;margin:0 0 4px;font-weight:600}
+.a2hs p{margin:0 0 4px}
+.kt-prev{display:block;max-width:100%;height:auto;margin:10px auto 0;border:1px solid #D69C1C}
+@media (display-mode:standalone){.a2hs{display:none}}
+.wrap{padding-top:calc(40px + env(safe-area-inset-top));padding-bottom:calc(56px + env(safe-area-inset-bottom))}
+@media (min-width:600px){.wrap{padding-top:calc(56px + env(safe-area-inset-top))}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="en">SCENT</p>
+    <div class="orn">✦ ✦ ✦</div>
+    <h1>生まれ日占い</h1>
+    <p class="lead">生まれた日から、あなたの「らしさ」と<br>ふたりの相性をのぞいてみましょう。</p>
+  </header>
+  <hr class="rule">
+
+  <div id="soloInput">
+    <form class="form" id="soloForm" autocomplete="off" onsubmit="return false">
+      <h2>あなたの生まれ日</h2>
+      <label for="nm">お名前・ニックネーム（なくてもOK）</label>
+      <input type="text" id="nm" maxlength="12" placeholder="例：たいき">
+      <label>生年月日</label>
+      <div class="row">
+        <select id="yr" aria-label="年"></select>
+        <select id="mo" aria-label="月"></select>
+        <select id="dy" aria-label="日"></select>
+      </div>
+      <div class="chk"><input type="checkbox" id="unk" checked><label for="unk" style="margin:0">出生時間はわからない</label></div>
+      <div id="timeBox" hidden>
+        <label for="tm">生まれた時間</label>
+        <input type="time" id="tm" value="12:00">
+      </div>
+      <p class="hint">出生時間は母子手帳に載っていることがあります。わからなくても占えます。</p>
+      <button type="button" class="btn" id="go">占う</button>
+      <p class="msg" id="msg" role="status"></p>
+    </form>
+  </div>
+
+  <div class="tabs main" role="tablist">
+    <button type="button" id="tabChar" role="tab" aria-selected="true">性格</button>
+    <button type="button" id="tabLuck" role="tab" aria-selected="false">運気</button>
+    <button type="button" id="tabPair" role="tab" aria-selected="false">相性</button>
+    <button type="button" id="tabKarte" role="tab" aria-selected="false">カルテ</button>
+    <button type="button" id="tabZukan" role="tab" aria-selected="false">キャラクター一覧</button>
+  </div>
+
+  <section id="panelChar" class="panel" role="tabpanel">
+    <div id="result"></div>
+    <button type="button" class="btn sub" id="copyBtn">結果をコピー</button>
+    <p class="msg" id="copyMsg" role="status"></p>
+    <textarea class="copyarea" id="copyArea" readonly aria-label="コピー用の文章"></textarea>
+
+  </section>
+
+  <section id="panelLuck" class="panel" role="tabpanel" hidden>
+    <div class="tabs sub" role="tablist">
+      <button type="button" id="lkDay" role="tab" aria-selected="true">今日</button>
+      <button type="button" id="lkMonth" role="tab" aria-selected="false">今月</button>
+      <button type="button" id="lkYear" role="tab" aria-selected="false">今年</button>
+      <button type="button" id="lkLife" role="tab" aria-selected="false">生涯</button>
+    </div>
+    <div id="luckBody"></div>
+  </section>
+
+  <section id="panelPair" class="panel" role="tabpanel" hidden>
+    <form class="form" id="pairForm" autocomplete="off" onsubmit="return false">
+      <h2>ひとり目</h2>
+      <label for="pn1">お名前・ニックネーム（なくてもOK）</label>
+      <input type="text" id="pn1" maxlength="12" placeholder="例：たいき">
+      <label>生年月日</label>
+      <div class="row">
+        <select id="py1" aria-label="ひとり目の年"></select>
+        <select id="pm1" aria-label="ひとり目の月"></select>
+        <select id="pd1" aria-label="ひとり目の日"></select>
+      </div>
+      <hr class="rule">
+      <h2>ふたり目</h2>
+      <label for="pn2">お名前・ニックネーム（なくてもOK）</label>
+      <input type="text" id="pn2" maxlength="12" placeholder="例：みさき">
+      <label>生年月日</label>
+      <div class="row">
+        <select id="py2" aria-label="ふたり目の年"></select>
+        <select id="pm2" aria-label="ふたり目の月"></select>
+        <select id="pd2" aria-label="ふたり目の日"></select>
+      </div>
+      <button type="button" class="btn" id="goPair">相性を見る</button>
+      <p class="msg" id="pairMsg" role="status"></p>
+    </form>
+    <div id="pairResult"></div>
+    <button type="button" class="btn sub" id="copyBtn2">結果をコピー</button>
+    <p class="msg" id="copyMsg2" role="status"></p>
+    <textarea class="copyarea" id="copyArea2" readonly aria-label="コピー用の文章"></textarea>
+  </section>
+
+  <section id="panelKarte" class="panel" role="tabpanel" hidden>
+    <div id="karteBody"></div>
+    <div class="kt-bar">
+      <button type="button" class="btn" id="karteSave">画像で保存</button>
+      <p class="hint" id="karteNote">画像にはニックネームと生年月日が入ります。</p>
+      <p class="msg" id="karteMsg" role="status"></p>
+    </div>
+  </section>
+
+  <section id="panelZukan" class="panel" role="tabpanel" hidden>
+    <div id="zukanBox"></div>
+  </section>
+
+
+  <div class="foot">
+    <p class="orn">✦</p>
+    <p>エンターテインメントとしてお楽しみください。</p>
+    <p>点数は、四柱推命の考え方にもとづいて計算したものです。占いなので、科学的な裏づけがあるものではありません。</p>
+    <p>入力した内容は、この端末の中で計算するだけで、どこにも送信・保存しません。</p>
+    <p>文字の書体（フォント）は Google Fonts から読み込みます。このとき、入力した内容は送られません。</p>
+    <div class="a2hs">
+      <h2>ホーム画面に追加する方法</h2>
+      <p><b>iPhone：</b>Safariで開き、下の共有ボタン（四角から矢印が出たマーク）をタップして、「ホーム画面に追加」を選びます。</p>
+      <p><b>Android：</b>Chromeで開き、右上のメニュー（点が3つ）から「ホーム画面に追加」または「アプリをインストール」を選びます。</p>
+    </div>
+  </div>
+</div>
+
+<div class="zdlg" id="zdlg" hidden>
+  <div class="zsheet" role="dialog" aria-modal="true" aria-labelledby="zhead">
+    <button type="button" class="zx" data-zact="close" aria-label="閉じる">×</button>
+    <div class="zscroll" id="zscroll"></div>
+    <div class="zfoot">
+      <button type="button" data-zact="prev">前のキャラ</button>
+      <span id="zcount" aria-live="polite"></span>
+      <button type="button" data-zact="next">次のキャラ</button>
+    </div>
+  </div>
+</div>
+<script>
+'use strict';
+/* =====================================================================
+   計算部分（四柱推命の干支暦をもとにした一般的な方法）
+   ここから CALC-START 〜 CALC-END までは画面に依存しない関数だけ。
+   ===================================================================== */
+// ==CALC-START==
+var STEMS = ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸'];          // 天干（10）
+var BRANCHES = ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥']; // 地支（12）
+var ELEMS = ['木','火','土','金','水'];                                     // 五行（相生の順）
+// 地支の五行（子=水, 丑=土, 寅=木, 卯=木, 辰=土, 巳=火, 午=火, 未=土, 申=金, 酉=金, 戌=土, 亥=水）
+var BRANCH_ELEM = [4,2,0,0,2,1,1,2,3,3,2,4];
+
+// 天干 → 五行：甲乙=木(0) 丙丁=火(1) 戊己=土(2) 庚辛=金(3) 壬癸=水(4)
+function stemElem(s){ return Math.floor(s / 2); }
+// 陰陽：甲丙戊庚壬（偶数番）＝陽、乙丁己辛癸＝陰
+function stemYang(s){ return s % 2 === 0; }
+
+// グレゴリオ暦 → ユリウス通日（正午基準の整数）
+function gregorianToJDN(y, m, d){
+  var a = Math.floor((14 - m) / 12);
+  var yy = y + 4800 - a;
+  var mm = m + 12 * a - 3;
+  return d + Math.floor((153 * mm + 2) / 5) + 365 * yy + Math.floor(yy / 4)
+       - Math.floor(yy / 100) + Math.floor(yy / 400) - 32045;
+}
+// 日柱の番号（0=甲子, 1=乙丑 … 59=癸亥）。index = (JDN + 49) mod 60
+function dayPillarIndex(y, m, d){
+  return (((gregorianToJDN(y, m, d) + 49) % 60) + 60) % 60;
+}
+// 番号 → {s:天干, b:地支}。天干 = index mod 10、地支 = index mod 12
+function pillarFromIndex(i){ return { s: i % 10, b: i % 12 }; }
+
+// 年柱：立春で切り替え。簡略化として「2月4日より前は前年」とあつかう。
+// 年の干支 index = (年 - 4) mod 60
+function yearPillar(y, m, d){
+  var ey = (m < 2 || (m === 2 && d < 4)) ? y - 1 : y;
+  return pillarFromIndex((((ey - 4) % 60) + 60) % 60);
+}
+// 月柱：節入りの近似日で月支を決める。[月, 日, 月支番号]
+var SETSU = [[1,6,1],[2,4,2],[3,6,3],[4,5,4],[5,6,5],[6,6,6],[7,7,7],[8,8,8],[9,8,9],[10,8,10],[11,7,11],[12,7,0]];
+function monthBranch(m, d){
+  var b = 0; // 1/6より前（12/7以降からの続き）は子月
+  for (var i = 0; i < SETSU.length; i++){
+    var t = SETSU[i];
+    if (m > t[0] || (m === t[0] && d >= t[1])) b = t[2];
+  }
+  return b;
+}
+// 月干は年干から求める（五虎遁）。寅月の天干：甲・己年=丙, 乙・庚年=戊, 丙・辛年=庚, 丁・壬年=壬, 戊・癸年=甲
+// 式：(年干 mod 5) × 2 + 2。寅月から月支が進むごとに天干も1つずつ進む。
+function monthPillar(y, m, d){
+  var ys = yearPillar(y, m, d).s;
+  var b = monthBranch(m, d);
+  var toraStem = ((ys % 5) * 2 + 2) % 10;
+  var steps = (b - 2 + 12) % 12;
+  return { s: (toraStem + steps) % 10, b: b };
+}
+// 時柱：23:00〜0:59=子、1:00〜2:59=丑 … と2時間区切り
+function hourBranch(hh){ return Math.floor(((hh + 1) % 24) / 2); }
+// 時干は日干から求める（五鼠遁）。子の刻の天干：甲・己日=甲, 乙・庚日=丙, 丙・辛日=戊, 丁・壬日=庚, 戊・癸日=壬
+// 式：(日干 mod 5) × 2。簡略化として、23時台も「当日」の日干で計算する（本来は翌日の日干を使う流派もある）。
+function hourPillar(dayStem, hh){
+  var b = hourBranch(hh);
+  return { s: ((dayStem % 5) * 2 + b) % 10, b: b };
+}
+// まとめて計算。hh が null のときは時柱なし。
+function calcPillars(y, m, d, hh){
+  var day = pillarFromIndex(dayPillarIndex(y, m, d));
+  var res = { year: yearPillar(y, m, d), month: monthPillar(y, m, d), day: day, hour: null };
+  if (hh !== null && hh !== undefined) res.hour = hourPillar(day.s, hh);
+  return res;
+}
+// 五行バランス：各柱の天干・地支の五行を数える（合計 6 または 8）
+function countElements(p){
+  var c = [0,0,0,0,0];
+  [p.year, p.month, p.day, p.hour].forEach(function(x){
+    if (!x) return;
+    c[stemElem(x.s)]++;
+    c[BRANCH_ELEM[x.b]]++;
+  });
+  return c;
+}
+// 五行の関係。0=同じ, 1=aがbを生む(相生), 2=bがaを生む(相生), 3=相剋(aがbを剋す), 4=相剋(bがaを剋す)
+// 相生：木→火→土→金→水→木（次の番号）。相剋：木→土→水→火→金→木（+2 の番号）
+function elemRelation(a, b){
+  if (a === b) return 0;
+  if ((a + 1) % 5 === b) return 1;
+  if ((b + 1) % 5 === a) return 2;
+  if ((a + 2) % 5 === b) return 3;
+  return 4;
+}
+// 六合（子丑・寅亥・卯戌・辰酉・巳申・午未）：番号の和が 1 または 13
+function isRikugou(x, y){ return x !== y && (x + y === 1 || x + y === 13); }
+// 冲（子午・丑未・寅申・卯酉・辰戌・巳亥）：番号の差が 6
+function isChuu(x, y){ return Math.abs(x - y) === 6; }
+// 相性スコア。五行の関係の基本点に、日支の六合は加点・冲は減点、陰陽が異なれば加点。下限での底上げはしない（0〜100の範囲チェックのみ）。
+//  五行：相生 74・同じ 60・相剋 40 ／ 六合 +16・冲 -14 ／ 陰陽が異なる +6　→ おおよそ 26〜96 点
+function compatScore(dayA, dayB){
+  var rel = elemRelation(stemElem(dayA.s), stemElem(dayB.s));
+  var base = rel === 0 ? 60 : (rel === 1 || rel === 2) ? 74 : 40;
+  var goh = isRikugou(dayA.b, dayB.b), chu = isChuu(dayA.b, dayB.b);
+  var score = base + (goh ? 16 : 0) - (chu ? 14 : 0) + (stemYang(dayA.s) !== stemYang(dayB.s) ? 6 : 0);
+  return { score: Math.max(0, Math.min(100, score)), rel: rel, goh: goh, chu: chu };
+}
+// ---- 運気の計算（通変星・十二運）----
+var TSUHEN_NAMES = ['比肩','劫財','食神','傷官','偏財','正財','偏官','正官','偏印','印綬'];
+var PHASE_NAMES = ['長生','沐浴','冠帯','建禄','帝旺','衰','病','死','墓','絶','胎','養'];
+// 十二運ごとの基本点。四柱推命で一般にいわれる強弱に合わせる：
+// 帝旺・建禄・冠帯・長生は強く、衰・病・死・墓・絶は弱い（胎・養は育つ前の段階で中くらい）。
+var PHASE_BASE = [78,50,82,88,90,54,36,26,32,20,46,60];
+// 通変星による加減点（一般的な吉凶の傾向：正官・食神・正財・印綬は加点、劫財・偏官は減点）
+var TS_ADJ = [2,-4,6,-2,4,6,-4,8,-2,6];
+// 日干ごとの「長生」の位置（地支番号）：甲=亥, 乙=午, 丙=寅, 丁=酉, 戊=寅, 己=酉, 庚=巳, 辛=子, 壬=申, 癸=卯
+var CHOUSEI = [11,6,2,9,2,9,5,0,8,3];
+// 通変星：日干と、対象の天干の五行の関係＋陰陽の同異で10種に分ける。
+// 同じ五行=比肩/劫財、日干が生む=食神/傷官、日干が剋す=偏財/正財、日干を剋す=偏官/正官、日干を生む=偏印/印綬
+// （同じ陰陽が前者、異なる陰陽が後者）。elemRelation の 0..4 を、各グループの先頭番号に対応させる。
+function tsuhenIndex(dayStem, targetStem){
+  var rel = elemRelation(stemElem(dayStem), stemElem(targetStem));
+  var base = [0, 2, 8, 4, 6][rel];
+  return base + (stemYang(dayStem) === stemYang(targetStem) ? 0 : 1);
+}
+// 十二運：日干と対象の地支から。陽干は長生から順行、陰干は逆行。
+function twelvePhaseIndex(dayStem, branch){
+  var st = CHOUSEI[dayStem];
+  return stemYang(dayStem) ? ((branch - st + 12) % 12) : ((st - branch + 12) % 12);
+}
+// 運気スコア：十二運の基本点＋通変星の加減。下限での底上げはせず、0〜100の範囲チェックのみ。
+function fortuneOf(dayStem, pillar){
+  var ts = tsuhenIndex(dayStem, pillar.s), ph = twelvePhaseIndex(dayStem, pillar.b);
+  var sc = Math.max(0, Math.min(100, PHASE_BASE[ph] + TS_ADJ[ts]));
+  return { score: sc, ts: ts, ph: ph };
+}
+// 生涯の運気（簡易版）：10年ごとの区切り（0〜9歳, 10〜19歳, … 90〜99歳）に含まれる各年の年柱の地支で
+// 十二運の基本点を出して平均する。本来の「大運」ではない。
+function lifeCurve(dayStem, birthYear){
+  var out = [];
+  for (var k = 0; k < 10; k++){
+    var sum = 0;
+    for (var j = 0; j < 10; j++){
+      var yr = birthYear + k * 10 + j, br = (((yr - 4) % 12) + 12) % 12;
+      sum += PHASE_BASE[twelvePhaseIndex(dayStem, br)];
+    }
+    out.push(Math.round(sum / 10 * 10) / 10);
+  }
+  return out;
+}
+// ==CALC-END==
+
+/* =====================================================================
+   診断の文章（すべてオリジナル）
+   ===================================================================== */
+var CHARS = [
+ { name:'まっすぐ天をめざすツル', catchp:'迷わず空へ、一歩ずつ。',
+   per:'正直でまっすぐ、曲がったことが苦手ながんばり屋です。目標を決めると、周りに流されずコツコツ進めます。面倒見がよく、頼られると力が出るタイプ。一度決めたことを変えるのは、少しだけ苦手かもしれません。',
+   str:['向上心が強く、成長をあきらめない','誠実で、周りから信頼される','最後までやり抜く粘り強さ'],
+   cau:['意地を張りすぎて、引くタイミングを逃しやすい','弱音を人に見せるのが苦手'],
+   love:'好きになったら一途。言葉よりも行動で気持ちを示します。ゆっくり育てる恋が合います。',
+   work:'目標がはっきりした環境で力を発揮します。リーダーや、後輩を育てる役目に向いています。',
+   col:['深い森の緑','#4F6B4A'],
+   scent:'爽やかなミントやハーブ系のフレーバーで、背筋を伸ばして深呼吸するように。' },
+ { name:'ツタをわたるひらめきのリス', catchp:'やわらかく寄り添い、したたかに育つ。',
+   per:'物腰がやわらかく、どんな人ともなじめる調整上手です。人の気持ちを察する力が高く、場の空気をなごませます。見かけによらず芯が強く、環境が変わってもしなやかに適応できます。',
+   str:['誰とでも打ち解ける協調性','細やかな気配り','変化に合わせる適応力'],
+   cau:['周りに合わせすぎて、本音を後回しにしがち','決める場面で人にゆだねやすい'],
+   love:'相手に合わせて尽くすタイプ。安心できる穏やかな関係が長く続きます。',
+   work:'チームの潤滑油として活躍。接客や企画サポート、人と人をつなぐ仕事で光ります。',
+   col:['若草色','#8FA66B'],
+   scent:'甘くやさしいフルーツ系のフレーバーを、ゆったりおしゃべりしながら。' },
+ { name:'朝日をまとって舞うクジャク', catchp:'そこにいるだけで、場がぱっと明るくなる。',
+   per:'明るく華やかで、人を元気にする天性のムードメーカーです。細かいことにこだわらず、おおらか。気持ちがすぐ顔に出る、裏表のない人でもあります。熱しやすい分、気持ちの切り替えも早めです。',
+   str:['華やかな存在感','前向きで明るい発想','人を巻き込む力'],
+   cau:['関心がうつりやすく、途中で熱が冷めることも','話に夢中で、聞き役を忘れがち'],
+   love:'情熱的でストレート。盛り上がりやすいので、ゆっくりペースを合わせると長続きします。',
+   work:'人前に立つ、発信する、場を盛り上げる仕事で本領発揮です。',
+   col:['琥珀色','#C98A3A'],
+   scent:'華やかなトロピカルや柑橘系のフレーバーで、みんなで盛り上がる時間を。' },
+ { name:'ろうそくの夜をみつめるフクロウ', catchp:'静かな灯りで、そっと照らす人。',
+   per:'穏やかで思慮深く、じっくり考えて動く人です。内側に熱い想いを秘めていて、好きなことへの集中力は抜群。聞き上手で、相談相手に選ばれがちです。気を許した相手にだけ、おちゃめな一面を見せます。',
+   str:['物事を見抜く洞察力','聞き上手','深く集中できる力'],
+   cau:['考えすぎて、動き出しが遅れがち','気持ちをひとりで溜め込みやすい'],
+   love:'慎重ですが、心を開くと深く想います。静かな時間を一緒に過ごせる人と好相性です。',
+   work:'研究、ものづくり、専門性を磨く仕事に向いています。ひとりで集中できる環境が合います。',
+   col:['あたたかいクリーム色','#E6D3A3'],
+   scent:'落ち着いたウッディ系やスパイス系のフレーバーで、静かに自分と向き合う時間を。' },
+ { name:'山の頂でじっと待つヤギ', catchp:'動じない心で、みんなの足場になる。',
+   per:'どっしり落ち着いた安定感の持ち主です。慌てず、約束を守り、周りから自然と頼られます。マイペースで、自分の信念はなかなか曲げません。のんびり見えて、いざという時の底力があります。',
+   str:['ゆるがない安定感','強い責任感','懐の深さ'],
+   cau:['頑固になって、新しいやり方を受け入れにくいことも','動き出しがゆっくりに見られやすい'],
+   love:'浮ついたことは苦手で、誠実にじっくり。長く寄り添う安定した関係が似合います。',
+   work:'組織の要になる役目、管理や運営など、長く続ける仕事で信頼を集めます。',
+   col:['大地の茶色','#8B6B4A'],
+   scent:'コクのある濃厚なフレーバーを、どっしり腰を据えて。' },
+ { name:'畑にそっと種をまくウサギ', catchp:'ふんわり包んで、人も才能も育てる。',
+   per:'面倒見がよく、あたたかい人です。人の長所を見つけて伸ばすのが上手。控えめで、自分より人を優先しがちです。想像力が豊かで、こつこつ努力を重ねられます。',
+   str:['人を育てる力','思いやり','地道に続ける努力'],
+   cau:['頼まれると断れず、疲れをためやすい','心配ごとを抱えやすい'],
+   love:'尽くし上手で家庭的。甘えてもらえると嬉しいタイプですが、ご自身も甘えて大丈夫です。',
+   work:'教育、サービス、サポート役の仕事で力を発揮します。',
+   col:['生成りのベージュ','#CDB89A'],
+   scent:'ミルキーやバニラ系の甘いフレーバーで、ほっとひと息。' },
+ { name:'雲をぬけて風に舞うハヤブサ', catchp:'迷いなく決めて、まっすぐ切り込む。',
+   per:'決断が早く、正義感の強い行動派です。白黒はっきりさせたい性格で、頼もしいリーダー役になれます。言葉がストレートで誤解されることもありますが、裏表はありません。困っている人を放っておけない面もあります。',
+   str:['スピード感のある決断力','動き出しの早さ','筋を通す姿勢'],
+   cau:['ストレートな言い方が強く聞こえることがある','勝負ごとで力みやすい'],
+   love:'駆け引きより直球。大切な人を守りたい気持ちが強いタイプです。',
+   work:'判断の早さが活きる、営業、交渉、新しいことの立ち上げに向いています。',
+   col:['スチールブルー','#5E7A99'],
+   scent:'すっきり強めのミント系やアイス系のフレーバーで、気分をリセット。' },
+ { name:'月のしずくを集めるネコ', catchp:'重ねるほど光る、繊細な宝石。',
+   per:'感性が鋭く、美意識の高い人です。見た目も中身も上質なものを好み、こだわりは強め。繊細で、人の言葉を深く受け止めます。プライドが高く見えて、実は磨き続ける努力家です。',
+   str:['センスのよさ','繊細な気配り','上を目指す向上心'],
+   cau:['傷つくと引きずりやすい','完璧を求めて疲れることも'],
+   love:'理想は高め。ですが信頼できる人には、とても甘え上手になります。',
+   work:'デザイン、美容、接客など、センスや目利きが活きる仕事に向いています。',
+   col:['上品なシルバーグレー','#A9ADB3'],
+   scent:'香りの重なりが楽しめる上品なブレンドを、じっくり味わって。' },
+ { name:'潮風にのって旅するクジラ', catchp:'大きな心で、流れにのって遠くへ。',
+   per:'スケールが大きく、自由を愛する人です。発想が豊かで、広い世界の話が大好き。包容力があり、どんな人も受け止める器があります。興味が広がるので、ひとつに絞るのは少し苦手かもしれません。',
+   str:['包み込む包容力','柔軟な発想','行動範囲の広さ'],
+   cau:['気まぐれに見られることも','予定やお金の管理が大ざっぱになりがち'],
+   love:'自由を大切にするので、束縛しない相手と好相性。のびのびした関係が合います。',
+   work:'アイデアを広げる企画、人や物が動く仕事、海外にも縁がありそうです。',
+   col:['深い海の青','#2F4E7A'],
+   scent:'ブルーベリーやグレープなど、ひんやり系のフレーバーで、ゆったり流れる時間を。' },
+ { name:'雨音にききいるカエル', catchp:'静かにしみこみ、そっと芽を育てる。',
+   per:'感受性が豊かで、やさしい癒やし系です。目に見えない気持ちや空気を感じ取る力があります。控えめですが、コツコツ学ぶ粘り強い努力家。ひらめきも冴えています。',
+   str:['人の気持ちに寄り添う共感力','学び続ける力','豊かな想像力'],
+   cau:['気分の波をひとりで抱え込みやすい','慎重すぎてチャンスを見送りがち'],
+   love:'相手の気持ちを察する、やさしい愛し方。穏やかに信頼を積み重ねます。',
+   work:'リサーチ、カウンセリング、書く仕事など、深く考える仕事に向いています。',
+   col:['雨上がりの水色','#8FB0BF'],
+   scent:'桃やライチなど、みずみずしいフレーバーで、しっとり落ち着く時間を。' }
+];
+
+var FACES = [
+ '頭の回転が速く、初対面でも機転の利く人に見えます。好奇心旺盛で、話題が豊富な印象です。',
+ '落ち着いて誠実な印象です。口数が多くなくても、約束を守る人だと信頼されます。',
+ '堂々としていて頼れる印象です。行動的で、自然と場を引っ張る人に見えます。',
+ 'やわらかく上品な印象です。穏やかな笑顔で、話しかけやすい人だと思われています。',
+ 'スケールが大きく、華のある印象です。自信があるように見えて、周りから一目置かれます。',
+ 'ミステリアスで落ち着いた印象です。知的で観察力のある人だと思われています。',
+ '明るく社交的な印象です。エネルギッシュで、一緒にいると楽しい人に見えます。',
+ '穏やかで親しみやすい印象です。やさしい雰囲気で、よく相談されるのではないでしょうか。',
+ '器用で機転の利く印象です。ユーモアがあり、話し上手な人だと思われています。',
+ 'きちんとして洗練された印象です。身だしなみや言葉づかいに気を配る人に見えます。',
+ '誠実で義理堅い印象です。仲間思いで、いざという時に頼れる人だと思われています。',
+ 'まっすぐで裏表のない印象です。好きなことに情熱的で、周りからかわいがられます。'
+];
+
+var INNER = [
+ '本音では、人に頼らず自分の力で道を切り開きたい気持ちが強いようです。実はとても負けず嫌いな一面も。',
+ '本音は、争わず穏やかに暮らしたい人。実は人の目を気にしていて、安心できる居場所を求めています。',
+ '心の奥には、認められたい、輝きたいという熱があります。楽しいことが何より大好きです。',
+ '心の奥では、ひとりの人に深く想われたい気持ちがあります。静かに燃える情熱と、こだわりを秘めています。',
+ '本音では、安定と安心が一番。どっしり構えているようで、責任を重く感じてがんばっています。',
+ '本音は、人の役に立ちたい、必要とされたいという気持ち。実はとても甘えたい面もあります。',
+ '心の奥では、筋を通してはっきりさせたい人。意外と情にもろい、あたたかな一面もあります。',
+ '本音では、自分をわかってほしい気持ちがあります。繊細で、特別に大切にされたい想いを抱いています。',
+ '心の奥では、自由でいたい気持ちが強め。しばられず、広い世界を見てみたいと思っています。',
+ '本音は、静かに休める時間がほしい人。人の気持ちを受け止めすぎるので、ひとりで充電したいのです。'
+];
+
+var MANY = [
+ '木が多めです。成長意欲が強く、あれこれ手を広げがち。ひと息ついて、足もとを休ませる時間を。',
+ '火が多めです。情熱的で熱しやすいタイプ。ときどきクールダウンの時間をとると長続きします。',
+ '土が多めです。安定感はピカイチ。たまには新しい場所へ出かけると、いい刺激になります。',
+ '金が多めです。しっかり者で基準が明確。肩の力をぬいて、ゆるい時間も楽しんで。',
+ '水が多めです。感受性と柔軟さが豊か。考えすぎたら、体を動かして気分転換を。'
+];
+var FEW = [
+ '木が少なめです。新しいことへの一歩を意識すると流れが良くなります。緑や植物をそばに。',
+ '火が少なめです。笑う時間、楽しむ時間を意識して増やすと元気が出ます。',
+ '土が少なめです。毎日の過ごし方を整えると安定します。食事をゆっくり味わって。',
+ '金が少なめです。やることの優先順位を決めると、気持ちがすっきりします。',
+ '水が少なめです。ひと息つく時間や、じっくり休むことを大切に。'
+];
+
+/* 相性の文章 */
+var REL_TITLE = ['似たもの同士','支え合う','刺激し合う'];
+var REL_TEXT = [
+ '考え方や感覚が近く、多くを話さなくても通じ合える安心感があるふたりです。',
+ '片方がもう片方を自然に後押しできる、心地よい関係です。一緒にいると、お互いの良いところが育ちます。',
+ '違いが多いぶん、新鮮な発見がたくさんあるふたりです。お互いにない部分を見せ合える、刺激的な関係です。'
+];
+var REL_TIP = [
+ '似ているからこそ、ときどき違う意見も言葉にしてみましょう。新しい景色が見えてきます。',
+ '支えてもらったら「ありがとう」を言葉にするのがコツ。感謝が伝わるほど、関係が深まります。',
+ '違いを「面白い」と笑い合えるとぐっと仲良しに。相手のペースを尊重する余裕がカギです。'
+];
+
+/* =====================================================================
+   キャラクターのイラスト（外部画像なし・金とネイビーの線画）
+   ===================================================================== */
+function eyes(x1, x2, y){
+  return '<circle class="nf" cx="'+x1+'" cy="'+y+'" r="2.6"/><circle class="nf" cx="'+x2+'" cy="'+y+'" r="2.6"/>';
+}
+var ART = [
+ // 甲 ツル
+ function(){return '<path class="g" d="M44 92 Q60 80 82 94"/><ellipse class="iv" cx="60" cy="92" rx="28" ry="17"/><path class="g" d="M42 92 Q60 78 80 94"/>'
+  +'<path class="n" d="M72 80 Q84 60 66 46 M54 108 V118 M66 108 V118"/><circle class="iv" cx="62" cy="38" r="10"/>'
+  +'<path class="n" d="M71 38 L92 43"/><circle class="gf" cx="57" cy="30" r="3.5"/><circle class="nf" cx="64" cy="37" r="2.2"/>';},
+ // 乙 リス
+ function(){return '<path class="g" d="M84 92 C110 88 114 50 94 36 C100 60 92 68 82 72"/>'
+  +'<path class="n" d="M43 56 L40 38 L55 50 M77 56 L80 38 L65 50"/><circle class="iv" cx="60" cy="74" r="23"/>'
+  +eyes(51,69,70)+'<ellipse class="nf" cx="60" cy="80" rx="3.5" ry="2.5"/><path class="n" d="M60 83 V90 M55 90 H65"/>';},
+ // 丙 クジャク
+ function(){return '<path class="g" d="M16 72 A44 44 0 0 1 104 72 M26 76 A34 34 0 0 1 94 76"/>'
+  +'<circle class="gf" cx="60" cy="26" r="3.5"/><circle class="gf" cx="33" cy="36" r="3.5"/><circle class="gf" cx="87" cy="36" r="3.5"/><circle class="gf" cx="17" cy="58" r="3.5"/><circle class="gf" cx="103" cy="58" r="3.5"/>'
+  +'<path class="n" d="M60 62 V50 M54 63 L49 53 M66 63 L71 53"/><circle class="iv" cx="60" cy="78" r="16"/>'
+  +eyes(54,66,75)+'<path class="gf" d="M56 82 L64 82 L60 90Z"/><path class="n" d="M42 96 Q60 120 78 96"/>';},
+ // 丁 フクロウ
+ function(){return '<path class="iv" d="M32 52 Q60 22 88 52 L90 90 Q60 112 30 90Z"/><path class="n" d="M32 52 L28 36 L44 44 M88 52 L92 36 L76 44"/>'
+  +'<circle class="g" cx="47" cy="66" r="10"/><circle class="g" cx="73" cy="66" r="10"/><circle class="nf" cx="47" cy="66" r="4"/><circle class="nf" cx="73" cy="66" r="4"/>'
+  +'<path class="gf" d="M56 77 L64 77 L60 85Z"/><path class="g" d="M46 96 q4 4 8 0 M66 96 q4 4 8 0"/>';},
+ // 戊 ヤギ
+ function(){return '<path class="g" d="M50 52 C46 34 34 28 27 34 M70 52 C74 34 86 28 93 34"/>'
+  +'<path class="n" d="M43 64 L26 68 L42 74 M77 64 L94 68 L78 74"/><ellipse class="iv" cx="60" cy="76" rx="18" ry="27"/>'
+  +eyes(52,68,68)+'<path class="n" d="M55 92 h0 M65 92 h0"/><circle class="nf" cx="55" cy="90" r="1.8"/><circle class="nf" cx="65" cy="90" r="1.8"/><path class="g" d="M54 102 L60 116 L66 102"/>';},
+ // 己 ウサギ
+ function(){return '<ellipse class="iv" cx="46" cy="36" rx="8" ry="22"/><ellipse class="iv" cx="74" cy="36" rx="8" ry="22"/>'
+  +'<path class="g" d="M46 24 V46 M74 24 V46"/><circle class="iv" cx="60" cy="80" r="25"/>'
+  +eyes(50,70,76)+'<path class="nf" d="M57 84 L63 84 L60 88Z"/><path class="n" d="M60 88 V92 M54 94 Q60 98 60 92 Q60 98 66 94"/>'
+  +'<circle class="gf" cx="42" cy="88" r="2.5"/><circle class="gf" cx="78" cy="88" r="2.5"/>';},
+ // 庚 ハヤブサ
+ function(){return '<path class="n" d="M22 70 Q10 102 42 114 Q30 98 36 84"/><path class="n" d="M40 46 Q34 36 24 38"/>'
+  +'<circle class="iv" cx="56" cy="64" r="24"/><path class="gf" d="M78 62 Q98 62 94 82 Q86 72 78 74Z"/><circle class="nf" cx="64" cy="58" r="3"/><path class="g" d="M60 66 Q56 80 60 92"/>';},
+ // 辛 ネコ
+ function(){return '<path class="n" d="M38 58 L36 30 L58 50 M82 58 L84 30 L62 50"/><circle class="iv" cx="60" cy="76" r="26"/>'
+  +eyes(50,70,74)+'<path class="nf" d="M57 82 L63 82 L60 86Z"/><path class="n" d="M60 86 Q56 92 52 90 M60 86 Q64 92 68 90"/>'
+  +'<path class="g" d="M28 82 L44 84 M28 92 L44 88 M92 82 L76 84 M92 92 L76 88"/><path class="gf" d="M60 52 L64 58 L60 64 L56 58Z"/>';},
+ // 壬 クジラ
+ function(){return '<path class="g" d="M44 46 V32 M44 32 q-8 -6 -12 -2 M44 32 q8 -6 12 -2"/>'
+  +'<path class="iv" d="M14 78 C14 52 50 46 76 58 C98 66 100 82 90 92 C70 108 20 106 14 78Z"/>'
+  +'<path class="n" d="M92 66 C100 58 106 50 112 44 M92 66 C102 64 110 66 114 60"/>'
+  +'<circle class="nf" cx="34" cy="72" r="2.8"/><path class="g" d="M30 90 H68 M36 97 H60"/><path class="g" d="M8 112 q8 -6 16 0 t16 0 t16 0 t16 0 t16 0"/>';},
+ // 癸 カエル
+ function(){return '<path class="gf" d="M22 18 q-4 7 0 9 q4 -2 0 -9z"/><path class="gf" d="M60 8 q-4 7 0 9 q4 -2 0 -9z"/><path class="gf" d="M98 20 q-4 7 0 9 q4 -2 0 -9z"/>'
+  +'<ellipse class="iv" cx="60" cy="80" rx="36" ry="24"/><circle class="iv" cx="40" cy="56" r="11"/><circle class="iv" cx="80" cy="56" r="11"/>'
+  +'<circle class="nf" cx="40" cy="56" r="4"/><circle class="nf" cx="80" cy="56" r="4"/><path class="n" d="M34 86 Q60 104 86 86"/><circle class="nf" cx="55" cy="76" r="1.8"/><circle class="nf" cx="65" cy="76" r="1.8"/>';}
+];
+function svgArt(i){
+  return '<svg viewBox="0 0 120 120" role="img" aria-label="'+esc(CHARS[i].name)+'のイラスト">'+ART[i]()+'</svg>';
+}
+
+/* =====================================================================
+   画面まわり
+   ===================================================================== */
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+}
+function daysIn(y, m){ return new Date(y, m, 0).getDate(); }
+
+function fillDateSelects(yId, mId, dId, y, m, d){
+  var ys = $(yId), ms = $(mId), ds = $(dId), i, h = '';
+  for (i = new Date().getFullYear(); i >= 1920; i--) h += '<option value="'+i+'">'+i+'年</option>';
+  ys.innerHTML = h;
+  h = ''; for (i = 1; i <= 12; i++) h += '<option value="'+i+'">'+i+'月</option>';
+  ms.innerHTML = h;
+  ys.value = y; ms.value = m;
+  function days(keep){
+    var n = daysIn(+ys.value, +ms.value), cur = keep ? +ds.value : d, s = '';
+    for (var k = 1; k <= n; k++) s += '<option value="'+k+'">'+k+'日</option>';
+    ds.innerHTML = s;
+    ds.value = Math.min(cur || 1, n);
+  }
+  ys.addEventListener('change', function(){ days(true); });
+  ms.addEventListener('change', function(){ days(true); });
+  days(false);
+  ds.value = d;
+}
+function readDate(yId, mId, dId){ return { y:+$(yId).value, m:+$(mId).value, d:+$(dId).value }; }
+
+function pillarText(p){ return STEMS[p.s] + BRANCHES[p.b]; }
+
+function radarSvg(c){
+  var mx = Math.max(4, Math.max.apply(null, c)), cx = 150, cy = 140, R = 90, i, pts = [], grid = '', axes = '', labels = '';
+  function pt(k, r){ var a = -Math.PI/2 + k * 2*Math.PI/5; return [cx + r*Math.cos(a), cy + r*Math.sin(a)]; }
+  [0.33,0.66,1].forEach(function(f){
+    var s = []; for (i = 0; i < 5; i++){ var q = pt(i, R*f); s.push(q[0].toFixed(1)+','+q[1].toFixed(1)); }
+    grid += '<polygon points="'+s.join(' ')+'" fill="none" stroke="#D69C1C" stroke-opacity=".5" stroke-width="1"/>';
+  });
+  for (i = 0; i < 5; i++){
+    var e = pt(i, R), l = pt(i, R + 22), v = pt(i, R * c[i] / mx);
+    axes += '<line x1="'+cx+'" y1="'+cy+'" x2="'+e[0].toFixed(1)+'" y2="'+e[1].toFixed(1)+'" stroke="#D69C1C" stroke-opacity=".5"/>';
+    pts.push(v[0].toFixed(1)+','+v[1].toFixed(1));
+    labels += '<text x="'+l[0].toFixed(1)+'" y="'+(l[1]+5).toFixed(1)+'" text-anchor="middle" font-size="15" font-family="Shippori Mincho,serif" fill="#253A5E">'+ELEMS[i]+' '+c[i]+'</text>';
+  }
+  return '<svg class="radar" viewBox="0 0 300 270" role="img" aria-label="五行バランス '+ELEMS.map(function(n,k){return n+c[k];}).join(' ')+'">'
+    + grid + axes + '<polygon points="'+pts.join(' ')+'" fill="#D69C1C" fill-opacity=".28" stroke="#253A5E" stroke-width="2" stroke-linejoin="round"/>' + labels + '</svg>';
+}
+
+function elemAdvice(c){
+  var mx = Math.max.apply(null, c), mn = Math.min.apply(null, c), hi = c.indexOf(mx), lo = c.indexOf(mn);
+  if (mx - mn <= 1) return 'どの要素もバランスよくそろっています。何でもほどよくこなせる、安定したタイプです。';
+  var t = MANY[hi];
+  if (mn === 0) t += ' ' + FEW[lo]; else t += ' ' + FEW[lo];
+  return t;
+}
+
+/* 結果の組み立て。戻り値：{html, text} */
+function buildSolo(name, y, m, d, hh, isSample){
+  var p = calcPillars(y, m, d, hh), ch = CHARS[p.day.s], face = FACES[p.day.b], c = countElements(p);
+  var who = name ? esc(name) + ' さん' : 'あなた';
+  var whoPlain = name ? name + ' さん' : 'あなた';
+  var dateStr = y + '年' + m + '月' + d + '日生まれ' + (hh !== null && hh !== undefined ? '（' + hh + '時台）' : '');
+  var yin = stemYang(p.day.s) ? '陽' : '陰';
+  var h = '';
+  h += '<div class="card hero">' + (isSample ? '<span class="sample">これは例です（'+y+'年'+m+'月'+d+'日生まれ）</span>' : '')
+     + '<p class="who">' + who + 'は…</p>' + svgArt(p.day.s)
+     + '<p class="cname">' + esc(ch.name) + '</p><p class="catch">' + esc(ch.catchp) + '</p>'
+     + '<div class="tags"><span class="tag">' + ELEMS[stemElem(p.day.s)] + 'の気質</span><span class="tag">' + yin + 'のタイプ</span></div>'
+     + '<div class="body"><p>' + esc(ch.per) + '</p></div></div>';
+  h += '<div class="card"><h3>強み</h3><ul class="pts">' + ch.str.map(function(s){return '<li>'+esc(s)+'</li>';}).join('') + '</ul></div>';
+  h += '<div class="card"><h3>気をつけたいこと</h3><ul class="pts">' + ch.cau.map(function(s){return '<li>'+esc(s)+'</li>';}).join('') + '</ul></div>';
+  h += '<div class="card"><h3>恋のクセ</h3><p>' + esc(ch.love) + '</p></div>';
+  h += '<div class="card"><h3>仕事のスタイル</h3><p>' + esc(ch.work) + '</p></div>';
+  h += '<div class="card"><h3>まわりから見えるあなた</h3><p>' + esc(face) + '</p></div>';
+  var innerTxt = '';
+  if (p.hour){
+    innerTxt = INNER[p.hour.s];
+    h += '<div class="card"><h3>心の奥のあなた（本音）</h3><p>' + esc(innerTxt) + '</p></div>';
+  } else {
+    h += '<div class="card"><h3>心の奥のあなた（本音）</h3><p>出生時間がわかると、心の奥の性格も見られます。</p></div>';
+  }
+  var adv = elemAdvice(c);
+  h += '<div class="card"><h3>五行バランス</h3>' + radarSvg(c) + '<p style="margin-top:10px">' + esc(adv) + '</p></div>';
+  h += '<div class="card"><h3>ラッキーカラー</h3><p><span class="sw" style="background:'+ch.col[1]+'"></span>' + esc(ch.col[0]) + '</p></div>';
+  h += '<div class="card"><h3>SCENTでのおすすめの過ごし方</h3><p>' + esc(ch.scent) + '</p></div>';
+  h += '<div class="card"><details><summary>くわしく（生まれ日の干支）</summary>'
+     + '<table class="pl"><tr><th></th><th>年</th><th>月</th><th>日</th><th>時</th></tr><tr><th>干支</th><td>'
+     + pillarText(p.year) + '</td><td>' + pillarText(p.month) + '</td><td>' + pillarText(p.day) + '</td><td>' + (p.hour ? pillarText(p.hour) : '―') + '</td></tr></table>'
+     + '<p class="small" style="margin-top:10px">この占いでは、日の干支（' + pillarText(p.day) + '）を中心に見ています。節入り・立春の日付は、毎年おおむね同じ日で近似しているため、境目の日に生まれた人は、1日ぶんずれることがあります。</p></details></div>';
+
+  var t = '【SCENT 生まれ日占い】' + whoPlain + '（' + dateStr + '）\n'
+    + 'キャラクター：' + ch.name + '\n「' + ch.catchp + '」\n\n'
+    + '■性格\n' + ch.per + '\n\n■強み\n' + ch.str.map(function(s){return '・'+s;}).join('\n')
+    + '\n\n■気をつけたいこと\n' + ch.cau.map(function(s){return '・'+s;}).join('\n')
+    + '\n\n■恋のクセ\n' + ch.love + '\n\n■仕事のスタイル\n' + ch.work
+    + '\n\n■まわりから見えるあなた\n' + face
+    + '\n\n■心の奥のあなた\n' + (innerTxt || '出生時間がわかると、心の奥の性格も見られます。')
+    + '\n\n■五行バランス　' + ELEMS.map(function(n,k){return n+c[k];}).join(' ') + '\n' + adv
+    + '\n\n■ラッキーカラー：' + ch.col[0]
+    + '\n■SCENTでのおすすめ：' + ch.scent
+    + '\n\nエンターテインメントとしてお楽しみください。';
+  return { html:h, text:t };
+}
+
+/* ---------- 恋愛の相性（四柱推命の一般的な考え方を使ったオリジナルの判定） ---------- */
+// 干合（かんごう）：日干の番号の差が5（甲己・乙庚・丙辛・丁壬・戊癸）なら「惹かれ合う縁」
+function isKangou(sa, sb){ return Math.abs(sa - sb) === 5; }
+// 恋愛スコア。基礎点46に、判定ごとの加点・減点をそのまま足す（下限での底上げはしない。0〜100の範囲チェックのみ）。
+//  干合 +30 ／ 陰陽が異なる +12・同じ 0 ／ 日支：六合 +16・冲 -12 ／ 五行：相生 +18・同じ +8・相剋 -8
+//  おおよそ 26〜96 点に分布する。
+function loveScore(dayA, dayB){
+  var rel = elemRelation(stemElem(dayA.s), stemElem(dayB.s));
+  var kan = isKangou(dayA.s, dayB.s);
+  var yinyang = stemYang(dayA.s) !== stemYang(dayB.s);
+  var goh = isRikugou(dayA.b, dayB.b), chu = isChuu(dayA.b, dayB.b);
+  var sc = 46 + (kan ? 30 : 0) + (yinyang ? 12 : 0) + (goh ? 16 : 0) + (chu ? -12 : 0)
+         + (rel === 1 || rel === 2 ? 18 : (rel === 0 ? 8 : -8));
+  return { score: Math.max(0, Math.min(100, sc)), kan: kan, yinyang: yinyang, goh: goh, chu: chu, rel: rel };
+}
+// 点数の帯ごとの恋のタイプ（85以上／70〜84／55〜69／40〜54／39以下）。干合のときは特別なタイプ。
+// どの帯でも「どうすれば良くなるか」を具体的に書く。
+var LOVE_KAN = {
+  name:'生まれ日が惹かれ合う、特別なご縁',
+  flow:'生まれ日どうしが「干合」という、昔から惹かれ合う縁とされる組み合わせです。出会ってすぐ、不思議と話が弾んだり、安心感を覚えたりするかもしれません。気持ちが近づくのは早めですが、焦らず、ふたりのペースを大切にするとさらに深まります。',
+  tips:['会えたときに「今日はうれしかった」と、気持ちをそのまま言葉にする。','小さな約束をひとつずつ守って、信頼を積み重ねる。'],
+  date:'ふたりで1台のシーシャを囲み、それぞれの好きなフレーバーをミックスして、世界にひとつの味づくりを。',
+  care:'近いからこそ、言わなくても伝わると思い込まず、ときどき気持ちを確かめ合ってください。' };
+var LOVE_TIERS = [
+ { min:85, name:'ひと目で惹かれ合うふたり',
+   flow:'出会った瞬間から心地よさを感じやすい、とても相性のよいふたりです。自然に距離が縮まり、一緒にいる時間が当たり前になっていきます。気持ちの流れが近いので、素直に伝えるだけで関係が進みます。',
+   tips:['最初は短い時間のデートを何度か重ねて、居心地のよさを確かめる。','うれしかったことは、その日のうちにひとこと伝える。'],
+   date:'隣り合わせの席で、ふたりの好みを少しずつ交換しながら、ゆっくりおしゃべりを。',
+   care:'居心地がよすぎて気持ちを言わずに済ませがちなので、大事なことは言葉にしましょう。' },
+ { min:70, name:'ゆっくり育つふたり',
+   flow:'お互いを自然に後押しできる、穏やかな流れのふたりです。盛り上がりは静かでも、時間とともに信頼が重なり、気づけば大切な存在になっていきます。急がず進むほど長続きします。',
+   tips:['最初は短い時間のデートを何度か重ねる。','気持ちは察してもらうより、言葉で伝える。'],
+   date:'落ち着いた席で、1台のシーシャをふたりでゆっくり味わいながら、時間を気にせず過ごして。',
+   care:'穏やかな分、変化が少なく感じたら、いつもと違う場所に誘ってみましょう。' },
+ { min:55, name:'知るほど深まるふたり',
+   flow:'最初は「ふつう」に感じても、お互いを知るほど魅力が見えてくるふたりです。共通の話題や好きなものを見つけていくと、ぐっと距離が縮まります。会う回数を重ねることが、いちばんの近道です。',
+   tips:['相手の好きなことを聞いて、まず一度いっしょに体験してみる。','会ったあとに「楽しかった」とひとこと送る。'],
+   date:'お互いに好きなフレーバーを選び、ひと口ずつ交換して感想を言い合うのがおすすめ。',
+   care:'すれちがいを感じたら、思い込みで決めずに、気持ちを一度聞いてみましょう。' },
+ { min:40, name:'歩み寄りで育てるふたり',
+   flow:'感じ方やペースにちがいがあり、はじめは戸惑うこともあるふたりです。でも、ちがいは「知らなかった世界」でもあります。相手のペースを尊重して歩み寄ると、少しずつ信頼が育ち、関係はしっかり良くなっていきます。',
+   tips:['自分の都合だけでなく、相手の都合や気持ちも先に聞く。','意見がちがっても、笑って「なるほど」から始める。'],
+   date:'静かな席で、短い時間から。ふたりとも気になっていたフレーバーを選んで、感想を話し合ってみて。',
+   care:'意見がちがうときは、まず相手の話を最後まで聞いてみてください。' },
+ { min:0, name:'ていねいに積み重ねるふたり',
+   flow:'考え方やペースが大きくちがうふたりで、気持ちを合わせるには少し工夫が必要です。そのぶん、お互いにない部分を知れる貴重な組み合わせでもあります。ひとつずつ話し合い、約束を守っていくと、努力した分だけ関係が安定していきます。',
+   tips:['不満はためずに、落ち着いているときに「私はこう感じた」と伝える。','相手のよいところを毎回ひとつ見つけて、言葉にする。'],
+   date:'まずは短い時間のお茶やデートから。会話が途切れても気にせず、ゆっくり香りを楽しんで。',
+   care:'急いで答えを出さず、気持ちが落ち着いてから話し合うようにしましょう。' }
+];
+// 判定からタイプ（文章一式）を選ぶ
+function loveKind(L){
+  if (L.kan) return LOVE_KAN;
+  for (var i = 0; i < LOVE_TIERS.length; i++) if (L.score >= LOVE_TIERS[i].min) return LOVE_TIERS[i];
+  return LOVE_TIERS[LOVE_TIERS.length - 1];
+}
+// 恋愛の相性カード群（html と text を返す）
+function buildLove(na, nb, A, B){
+  var L = loveScore(A, B), K = loveKind(L);
+  var flow = K.flow;
+  if (!L.kan && L.goh) flow += 'ふたりの生まれ日は「六合」という縁の深い組み合わせで、距離が縮まりやすい力があります。';
+  if (!L.kan && L.chu) flow += 'ふたりの生まれ日はぶつかりやすい組み合わせですが、ぶつかったあとに話し合えれば、より深い絆になります。';
+  var heart = '<svg class="lheart" viewBox="0 0 24 22" aria-hidden="true"><path d="M12 20 C4 14 2 9 2 6.5 C2 3.8 4 2 6.4 2 C8.8 2 10.9 3.3 12 5.4 C13.1 3.3 15.2 2 17.6 2 C20 2 22 3.8 22 6.5 C22 9 20 14 12 20 Z" fill="none" stroke="#D69C1C" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+  var h = '<div class="card lovecard score">'
+    + '<div class="lovedeco">' + heart + ' ✦ ' + heart + '</div>'
+    + '<p class="small lovenote">恋愛の視点で見た相性です</p>'
+    + '<div><span class="small">恋愛 </span><span class="num">' + L.score + '</span><span class="unit"> 点</span></div>'
+    + '<p class="cname">' + esc(K.name) + '</p></div>';
+  h += '<div class="card lovecard"><h3>ふたりの恋の進み方</h3><p>' + esc(flow) + '</p></div>';
+  h += '<div class="card lovecard"><h3>それぞれの恋のクセ</h3><p><b>' + esc(na) + '（' + esc(CHARS[A.s].name) + '）</b><br>' + esc(CHARS[A.s].love)
+     + '</p><p><b>' + esc(nb) + '（' + esc(CHARS[B.s].name) + '）</b><br>' + esc(CHARS[B.s].love) + '</p></div>';
+  h += '<div class="card lovecard"><h3>距離が縮まるコツ</h3><ul class="pts"><li>' + esc(K.tips[0]) + '</li><li>' + esc(K.tips[1]) + '</li></ul></div>';
+  h += '<div class="card lovecard"><h3>SCENTでのおすすめデート</h3><p>' + esc(K.date) + '</p></div>';
+  h += '<div class="card lovecard"><h3>気をつけたい点</h3><p>' + esc(K.care) + '</p></div>';
+  var t = '\n\n【恋愛の相性】（恋愛の視点で見た相性です）\n恋愛 ' + L.score + '点　「' + K.name + '」'
+    + '\n\n■ふたりの恋の進み方\n' + flow
+    + '\n\n■それぞれの恋のクセ\n' + na + '（' + CHARS[A.s].name + '）：' + CHARS[A.s].love + '\n' + nb + '（' + CHARS[B.s].name + '）：' + CHARS[B.s].love
+    + '\n\n■距離が縮まるコツ\n・' + K.tips[0] + '\n・' + K.tips[1]
+    + '\n\n■SCENTでのおすすめデート\n' + K.date
+    + '\n\n■気をつけたい点\n' + K.care;
+  return { html:h, text:t };
+}
+
+function buildPair(n1, d1, n2, d2, isSample){
+  var A = pillarFromIndex(dayPillarIndex(d1.y, d1.m, d1.d)), B = pillarFromIndex(dayPillarIndex(d2.y, d2.m, d2.d));
+  var r = compatScore(A, B);
+  var tIdx = r.rel === 0 ? 0 : (r.rel <= 2 ? 1 : 2);
+  var na = n1 || 'ひとり目', nb = n2 || 'ふたり目';
+  var title = REL_TITLE[tIdx];
+  var text = REL_TEXT[tIdx];
+  if (r.rel === 1) text = na + 'さんが' + nb + 'さんを自然に後押しできる、心地よい関係です。' ; // 相生：aがbを生む
+  if (r.rel === 2) text = nb + 'さんが' + na + 'さんを自然に後押しできる、心地よい関係です。';
+  if (r.rel === 1 || r.rel === 2) text += 'ふたりでいると、お互いの良いところが育ちます。';
+  var extra = '';
+  if (r.goh) extra += 'さらに、生まれ日の相性が「六合」という縁の深い組み合わせ。自然と心地よい距離感でいられ、相性がぐんと上がります。';
+  if (r.chu) extra += '生まれ日の組み合わせは、ぶつかりやすいけれど惹かれ合う関係。正反対だからこそ、目が離せない存在です。本音で話せば、一気に距離が縮まります。';
+  if (r.score < 50) extra += '点数は控えめでも、違いを知ることが近道です。相手の考えを聞いて、ちがいを面白がることで、関係はぐんと良くなります。';
+  var tip = REL_TIP[tIdx] + (r.chu ? ' ぶつかったときは、まず相手の話を最後まで聞いてみて。' : '');
+  var h = '';
+  h += '<div class="card score">' + (isSample ? '<span class="sample">これは例です</span><br>' : '')
+     + '<div class="pair"><div>' + svgArt(A.s) + '<div class="small">' + esc(na) + '</div><div style="font-size:13px">' + esc(CHARS[A.s].name) + '</div></div><div class="x">✦</div>'
+     + '<div>' + svgArt(B.s) + '<div class="small">' + esc(nb) + '</div><div style="font-size:13px">' + esc(CHARS[B.s].name) + '</div></div></div>'
+     + '<hr class="rule"><div><span class="num">' + r.score + '</span><span class="unit"> 点</span></div>'
+     + '<p class="cname">' + esc(title) + 'のふたり</p></div>';
+  h += '<div class="card"><h3>ふたりの関係</h3><p>' + esc(text) + '</p>' + (extra ? '<p>' + esc(extra) + '</p>' : '') + '</div>';
+  var love = buildLove(na, nb, A, B);
+  h += love.html;
+  h += '<div class="card"><h3>うまくいくコツ</h3><p>' + esc(tip) + '</p></div>';
+  h += '<div class="card"><h3>SCENTでふたりにおすすめ</h3><p>' + esc(CHARS[A.s].scent) + '<br>' + esc(CHARS[B.s].scent) + '<br><span class="small">お互いのおすすめを一口ずつ交換してみるのも楽しいですよ。</span></p></div>';
+  h += '<div class="card"><details><summary>くわしく（点数について）</summary><p class="small">点数は、四柱推命の考え方にもとづいて計算したものです。占いなので、科学的な裏づけがあるものではありません。</p></details></div>';
+  var t = '【SCENT 生まれ日占い　ふたりの相性】\n' + na + '（' + CHARS[A.s].name + '）×' + nb + '（' + CHARS[B.s].name + '）\n'
+    + '相性：' + r.score + '点　「' + title + 'のふたり」\n\n' + text + (extra ? '\n' + extra : '') + '\n\n■うまくいくコツ\n' + tip
+    + love.text
+    + '\n\nエンターテインメントとしてお楽しみください。';
+  return { html:h, text:t };
+}
+
+/* コピー：クリックの中で navigator.clipboard.writeText を呼ぶ。失敗したら文字を選択状態にする */
+function setupCopy(btnId, msgId, areaId, getText){
+  $(btnId).addEventListener('click', function(){
+    var text = getText(), area = $(areaId), msg = $(msgId);
+    function fallback(){
+      area.value = text; area.classList.add('show'); area.focus(); area.select();
+      msg.textContent = '自動コピーができませんでした。文字を選択しています。長押し（またはCtrl/Cmd＋C）でコピーしてください。';
+    }
+    if (!text){ msg.textContent = '先に「占う」を押してください。'; return; }
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){
+        area.classList.remove('show'); msg.textContent = 'コピーしました。';
+      }, fallback);
+    } else { fallback(); }
+  });
+}
+
+/* ---------- 運気の文章（すべてオリジナル） ---------- */
+var TS_TEXT = [
+ { t:'自分らしさを出す時', a:'自分のペースと意見を大切にすると、物事が進みやすくなります。', k:'気になっていたことをひとつ、自分で決めて始める。SCENTでは好きなフレーバーをいつも通りゆっくり。' },
+ { t:'仲間と切磋琢磨する時', a:'同じ志をもつ人と刺激し合うと、力が伸びます。ひとりで抱えず、協力を頼ってみて。', k:'友人を誘って、ひとつのフレーバーをシェアしてみる。' },
+ { t:'楽しみが実りになる時', a:'好きなこと、おいしいものを楽しむ余裕が、アイデアと笑顔を呼びます。', k:'まだ試したことのないフレーバーに挑戦する。' },
+ { t:'感性と表現がさえる時', a:'思ったことを形にすると輝きます。言葉をやわらかく選ぶと、さらに伝わります。', k:'感じたことをメモや写真に残す。煙の形をぼんやり眺めるのもおすすめ。' },
+ { t:'人とのつながりが広がる時', a:'出会いやチャンスが動きやすい時期。フットワーク軽く顔を出すと、運がめぐります。', k:'初めての人にひとこと話しかけてみる。お店での会話も楽しんで。' },
+ { t:'コツコツが実を結ぶ時', a:'地道な積み重ねが評価されやすい時期。身の回りやお金の整理にも向いています。', k:'持ち物や予定を整理して、お気に入りの席でひと息。' },
+ { t:'チャレンジに向く時', a:'少し背伸びした挑戦が成長につながります。無理しすぎず、休む日も予定に入れて。', k:'先のばしにしていたことに一歩。ひんやり爽やかなフレーバーで気分を切り替え。' },
+ { t:'信頼が育つ時', a:'誠実な行動が、周りの信頼につながります。約束やマナーを丁寧に。', k:'「ありがとう」を言葉やひとことメッセージで伝える。' },
+ { t:'ひらめきを温める時', a:'ひらめきや興味を深める時期。ひとり時間で考えを整理すると、道が見えてきます。', k:'気になる本や話題を調べる。静かな席でゆっくり過ごす。' },
+ { t:'学びと支えを受け取る時', a:'人の助言や学びが力になります。素直に受け取ると運が開きます。', k:'尊敬する人に話を聞いてみる。あたたかい雰囲気のお店で、ゆっくり対話を。' }
+];
+var PH_TEXT = [
+ '新しい始まりのエネルギーが芽吹く、のびやかな流れです。',
+ '心がゆれ動き、魅力が磨かれる、感性豊かな流れです。',
+ '身なりを整えて世に出る、自信が育つ流れです。',
+ '実力が安定して発揮できる、地に足のついた充実の流れです。',
+ 'エネルギーが最高潮に満ちる、力強い流れです。',
+ '肩の力がぬけて、余裕と円熟味が出てくる流れです。',
+ '感受性が高まり、内面を見つめるのに向いた流れです。',
+ '動きをゆるめて、静かに次の準備を整える流れです。',
+ '力をたくわえ、大切なものをしまっておく流れです。',
+ 'いったんまっさらにして、生まれ変わる準備をする流れです。',
+ '新しい芽が宿る、可能性を温める流れです。',
+ '周りの支えを受けて、大切に育まれる流れです。'
+];
+
+// 星の数：80以上=5, 65以上=4, 50以上=3, 35以上=2, それ未満=1
+function starCount(sc){ return sc >= 80 ? 5 : sc >= 65 ? 4 : sc >= 50 ? 3 : sc >= 35 ? 2 : 1; }
+function stars(sc){
+  var n = starCount(sc);
+  return new Array(n + 1).join('★') + new Array(6 - n).join('☆');
+}
+function fortuneCard(label, f){
+  var tx = TS_TEXT[f.ts], low = f.score < 70;
+  return '<div class="card"><h3>' + esc(label) + '</h3>'
+   + '<div class="stars" aria-label="5段階中' + starCount(f.score) + '">' + stars(f.score) + '</div>'
+   + '<div class="meter"><i style="width:' + f.score + '%"></i></div>'
+   + '<p class="small" style="margin:0">運気 ' + f.score + ' ／ 100</p>'
+   + '<p class="ftitle">' + esc(tx.t) + '</p>'
+   + '<p class="small" style="margin:0 0 8px">' + TSUHEN_NAMES[f.ts] + '・' + PHASE_NAMES[f.ph] + '</p>'
+   + '<p>' + esc(PH_TEXT[f.ph]) + '</p>'
+   + '<p>' + esc(tx.a) + (f.score < 40 ? ' 今は「しっかり休んで準備する時期」。大きな決断は急がず、睡眠・食事・身の回りの整理を優先すると、次の流れにつながります。' : (low ? ' 今は「整える時期・準備の時期」。焦らず足もとを整え、予定を詰めすぎないようにすると、次の流れが良くなります。' : '')) + '</p>'
+   + '<p><strong style="font-family:Shippori Mincho,serif">ラッキーアクション</strong><br>' + esc(tx.k) + '</p></div>';
+}
+
+/* ---------- 運気タブ ---------- */
+var cur = { name:'', y:1995, m:5, d:20, sample:true };
+var luckMode = 'day', luckDate = null;
+function todayParts(){ var t = new Date(); return { y:t.getFullYear(), m:t.getMonth()+1, d:t.getDate() }; }
+function pad2(n){ return (n < 10 ? '0' : '') + n; }
+function shiftDate(dt, delta){
+  var t = new Date(dt.y, dt.m - 1, dt.d + delta);
+  return { y:t.getFullYear(), m:t.getMonth()+1, d:t.getDate() };
+}
+function lineChart(vals, ageNow){
+  var W = 320, H = 210, L = 30, R = 14, T = 34, B = 150, i, pts = [], dots = '', labs = '';
+  var step = (W - L - R) / 9, peak = 0;
+  for (i = 1; i < vals.length; i++) if (vals[i] > vals[peak]) peak = i;
+  function X(k){ return L + k * step; }
+  // 縦軸は、データの最小〜最大に合わせて10刻みで自動調整（0〜100の範囲内）
+  var vmin = Math.min.apply(null, vals), vmax = Math.max.apply(null, vals);
+  var lo = Math.max(0, Math.floor((vmin - 5) / 10) * 10), hi = Math.min(100, Math.ceil((vmax + 5) / 10) * 10);
+  if (hi - lo < 20){ hi = Math.min(100, lo + 20); lo = hi - 20; }
+  function Y(v){ return B - (v - lo) / (hi - lo) * (B - T); }
+  for (i = 0; i < vals.length; i++){
+    pts.push(X(i).toFixed(1) + ',' + Y(vals[i]).toFixed(1));
+    dots += '<circle cx="' + X(i).toFixed(1) + '" cy="' + Y(vals[i]).toFixed(1) + '" r="' + (i === peak ? 5 : 3.2) + '" fill="' + (i === peak ? '#D69C1C' : '#FDF9EF') + '" stroke="#253A5E" stroke-width="1.8"/>';
+    labs += '<text x="' + X(i).toFixed(1) + '" y="' + (B + 20) + '" text-anchor="middle" font-size="11" fill="#253A5E">' + (i * 10) + '</text>';
+  }
+  var g = '';
+  var gv = [], gs = (hi - lo) > 40 ? 20 : 10; for (var gg = lo + gs; gg < hi; gg += gs) gv.push(gg);
+  gv.forEach(function(v){ g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '" stroke="#D69C1C" stroke-opacity=".4"/><text x="' + (L - 6) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end" font-size="10" fill="#4b5a76">' + v + '</text>'; });
+  var mk = '';
+  if (ageNow >= 0 && ageNow < 100){
+    var ax = L + ageNow / 10 * step;
+    mk = '<line x1="' + ax.toFixed(1) + '" x2="' + ax.toFixed(1) + '" y1="' + (T - 8) + '" y2="' + B + '" stroke="#253A5E" stroke-dasharray="4 3"/><text x="' + ax.toFixed(1) + '" y="' + (T - 12) + '" text-anchor="middle" font-size="11" fill="#253A5E">いま</text>';
+  }
+  var px = X(peak), pl = '<text x="' + Math.min(Math.max(px, 40), W - 40).toFixed(1) + '" y="' + (Y(vals[peak]) - 12).toFixed(1) + '" text-anchor="middle" font-size="12" font-weight="700" fill="#8a6410">✦ チャンス期</text>';
+  return { peak: peak, svg: '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="生涯の運気の折れ線グラフ">' + g
+    + '<polyline points="' + pts.join(' ') + '" fill="none" stroke="#253A5E" stroke-width="2" stroke-linejoin="round"/>' + mk + dots + pl + labs
+    + '<text x="' + (W - R) + '" y="' + (B + 38) + '" text-anchor="end" font-size="10" fill="#4b5a76">年齢（歳）</text></svg>' };
+}
+function barChart(vals, labels){
+  var W = 320, H = 150, base = 110, bw = 18, gap = (W - 12 * bw) / 13, h = '';
+  for (var i = 0; i < vals.length; i++){
+    var x = gap + i * (bw + gap), bh = Math.max(2, vals[i] / 100 * 85);
+    h += '<rect x="' + x.toFixed(1) + '" y="' + (base - bh).toFixed(1) + '" width="' + bw + '" height="' + bh.toFixed(1) + '" fill="' + (i === 0 ? '#253A5E' : '#D69C1C') + '"/>'
+      + '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (base + 16) + '" text-anchor="middle" font-size="10" fill="#253A5E">' + labels[i] + '</text>'
+      + '<text x="' + (x + bw / 2).toFixed(1) + '" y="' + (base - bh - 4).toFixed(1) + '" text-anchor="middle" font-size="9" fill="#4b5a76">' + vals[i] + '</text>';
+  }
+  return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="12か月の運気の棒グラフ"><line x1="0" x2="' + W + '" y1="' + base + '" y2="' + base + '" stroke="#253A5E"/>' + h + '</svg>';
+}
+function renderLuck(){
+  var box = $('luckBody'), ds = calcPillars(cur.y, cur.m, cur.d, null).day.s, t = todayParts(), h = '', i;
+  var who = cur.name ? cur.name + ' さん' : 'あなた';
+  h += '<div class="card">' + (cur.sample ? '<span class="sample">これは例です（' + cur.y + '年' + cur.m + '月' + cur.d + '日生まれ）</span><br>' : '')
+     + '<p style="margin:0"><strong style="font-family:Shippori Mincho,serif">' + esc(who) + '</strong>の運気（' + cur.y + '年' + cur.m + '月' + cur.d + '日生まれ）</p></div>';
+  if (luckMode === 'day'){
+    if (!luckDate) luckDate = t;
+    var dp = pillarFromIndex(dayPillarIndex(luckDate.y, luckDate.m, luckDate.d));
+    h += '<div class="nav"><button type="button" id="lkPrev">前の日</button><input type="date" id="luckDate" min="1920-01-01" max="2100-12-31" value="' + luckDate.y + '-' + pad2(luckDate.m) + '-' + pad2(luckDate.d) + '" aria-label="見たい日"><button type="button" id="lkNext">次の日</button><button type="button" id="lkToday">今日</button></div>';
+    var isToday = luckDate.y === t.y && luckDate.m === t.m && luckDate.d === t.d;
+    h += fortuneCard((isToday ? '今日' : '') + '（' + luckDate.y + '年' + luckDate.m + '月' + luckDate.d + '日）の運気', fortuneOf(ds, dp));
+  } else if (luckMode === 'month'){
+    var vals = [], labs = [];
+    for (i = 0; i < 12; i++){
+      var tt = new Date(t.y, t.m - 1 + i, 15), yy = tt.getFullYear(), mm = tt.getMonth() + 1;
+      vals.push(fortuneOf(ds, monthPillar(yy, mm, 15)).score); labs.push(mm + '月');
+    }
+    h += fortuneCard('今月（' + t.m + '月）の運気', fortuneOf(ds, monthPillar(t.y, t.m, t.d)));
+    var best = 0; for (i = 1; i < 12; i++) if (vals[i] > vals[best]) best = i;
+    h += '<div class="card"><h3>これからの12か月</h3>' + barChart(vals, labs)
+      + '<p class="small">濃い紺の棒が今月です。いちばん運気が高いのは ' + labs[best] + ' です。低めの月は「整える・準備の時期」と考えて、ゆったり過ごしましょう。</p></div>';
+  } else if (luckMode === 'year'){
+    h += fortuneCard('今年（' + t.y + '年）の運気', fortuneOf(ds, yearPillar(t.y, t.m, t.d)));
+    h += fortuneCard('来年（' + (t.y + 1) + '年）の運気', fortuneOf(ds, yearPillar(t.y + 1, 6, 1)));
+    h += fortuneCard('再来年（' + (t.y + 2) + '年）の運気', fortuneOf(ds, yearPillar(t.y + 2, 6, 1)));
+  } else {
+    var cv = lifeCurve(ds, cur.y), age = t.y - cur.y - ((t.m < cur.m || (t.m === cur.m && t.d < cur.d)) ? 1 : 0);
+    var ch = lineChart(cv, age), pk = ch.peak, nowDec = Math.floor(age / 10);
+    h += '<div class="card"><h3>生涯の運気</h3>' + ch.svg
+      + '<p>いちばん追い風が強い「チャンス期」は <strong>' + (pk * 10) + '〜' + (pk * 10 + 9) + '歳</strong> ごろです。</p>';
+    if (age >= 0 && age < 100){
+      h += '<p>' + (cv[nowDec] >= cv[pk] - 4 ? 'いまの年代も、チャンス期に近い良い流れです。やりたいことに踏み出してみましょう。' : (cv[nowDec] >= 58 ? 'いまは安定した流れです。次のチャンス期に向けて、好きなことを育てていきましょう。' : 'いまは「整える・準備の時期」。次のチャンス期に向けて、学びや人とのご縁をたくわえましょう。')) + '</p>';
+    }
+    h += '<details><summary>くわしく</summary><p class="small">これは10年ごとの流れを大まかに見る簡易版です。本来の「大運」は、性別や節入りからの日数などを使って細かく出すため、ここでの結果とは異なる場合があります。運気の名前（長生・死など）は流れの名前で、縁起の良し悪しではありません。点数は、四柱推命の考え方にもとづいて計算したものです。占いなので、科学的な裏づけがあるものではありません。</p></details></div>';
+  }
+  h += '<div class="card"><details><summary>くわしく（点数について）</summary><p class="small">点数は、四柱推命の考え方にもとづいて計算したものです。占いなので、科学的な裏づけがあるものではありません。</p></details></div>';
+  box.innerHTML = h;
+  if (luckMode === 'day'){
+    var chg = function(dt){ luckDate = dt; renderLuck(); };
+    $('lkPrev').addEventListener('click', function(){ chg(shiftDate(luckDate, -1)); });
+    $('lkNext').addEventListener('click', function(){ chg(shiftDate(luckDate, 1)); });
+    $('lkToday').addEventListener('click', function(){ chg(todayParts()); });
+    $('luckDate').addEventListener('change', function(){
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(this.value);
+      if (m) chg({ y:+m[1], m:+m[2], d:+m[3] });
+    });
+  }
+}
+function setLuckMode(mode){
+  luckMode = mode;
+  [['day','lkDay'],['month','lkMonth'],['year','lkYear'],['life','lkLife']].forEach(function(a){
+    $(a[1]).setAttribute('aria-selected', a[0] === mode ? 'true' : 'false');
+  });
+  renderLuck();
+}
+
+var soloText = '', pairText = '';
+
+function showSolo(isSample){
+  var dt = readDate('yr','mo','dy'), hh = null;
+  if (!$('unk').checked){
+    var v = $('tm').value;
+    if (v && /^\d{1,2}:\d{2}$/.test(v)) hh = parseInt(v.split(':')[0], 10);
+  }
+  var nm = $('nm').value.trim();
+  var r = buildSolo(nm, dt.y, dt.m, dt.d, hh, isSample);
+  $('result').innerHTML = r.html; soloText = isSample ? '' : r.text;
+  $('copyMsg').textContent = ''; $('copyArea').classList.remove('show');
+  cur = { name:nm, y:dt.y, m:dt.m, d:dt.d, sample:isSample };
+  lastSolo = { name:nm, y:dt.y, m:dt.m, d:dt.d, hh:hh, charIndex:calcPillars(dt.y, dt.m, dt.d, null).day.s, sample:isSample, saved:false };
+  renderLuck();
+  return r;
+}
+
+function setTab(name){
+  var map = { char:['tabChar','panelChar'], luck:['tabLuck','panelLuck'], pair:['tabPair','panelPair'], karte:['tabKarte','panelKarte'], zukan:['tabZukan','panelZukan'] };
+  Object.keys(map).forEach(function(k){
+    var on = k === name;
+    $(map[k][0]).setAttribute('aria-selected', on ? 'true' : 'false');
+    $(map[k][1]).hidden = !on;
+  });
+  $('soloInput').hidden = (name === 'pair' || name === 'zukan');
+  if (name === 'zukan') updateZukanMark();
+  if (name === 'karte') renderKarte();
+}
+function smooth(){ return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'; }
+
+var lastSolo = null;   // いま画面に出ている「占った結果」
+
+/* =====================================================================
+   追加：キャラクター図鑑（だれでも見られる。お客さま情報は出さない）
+   ===================================================================== */
+function firstSentence(t){
+  var k = t.indexOf('。');
+  return k === -1 ? t : t.slice(0, k + 1);
+}
+// 相性のいいキャラ：同じ五行／相生（支え合う）。自分は除く
+function goodMatches(i){
+  var same = [], aid = [];
+  for (var j = 0; j < CHARS.length; j++){
+    if (j === i) continue;
+    var rel = elemRelation(stemElem(i), stemElem(j));
+    if (rel === 0) same.push(j); else if (rel === 1 || rel === 2) aid.push(j);
+  }
+  return { same:same, aid:aid };
+}
+var ZANIMALS = ['ツル','リス','クジャク','フクロウ','ヤギ','ウサギ','ハヤブサ','ネコ','クジラ','カエル'];
+function zSplit(i){
+  var n = CHARS[i].name, a = '', k;
+  for (k = 0; k < ZANIMALS.length; k++){ if (n.slice(-ZANIMALS[k].length) === ZANIMALS[k]){ a = ZANIMALS[k]; break; } }
+  if (!a) return { animal:n, mod:'' };
+  var m = n.slice(0, n.length - a.length);
+  if (m.slice(-1) === 'の') m = m.slice(0, -1);
+  return { animal:a, mod:m };
+}
+var zOpener = null, zCur = -1;
+function buildZukan(){
+  var h = '<p class="zlead">あなたのキャラはどれ？<br>アイコンをタップすると、くわしく見られます。</p><div class="zgrid">';
+  CHARS.forEach(function(ch, i){
+    var sp = zSplit(i);
+    h += '<button type="button" class="zbtn" data-ch="' + i + '" aria-haspopup="dialog" aria-label="' + esc(ch.name) + 'の詳細を見る">'
+      + '<span class="zmark"></span><span class="zico">' + svgArt(i) + '</span>'
+      + '<span class="zan">' + esc(sp.animal) + '</span><span class="zmod">' + esc(sp.mod) + '</span></button>';
+  });
+  $('zukanBox').innerHTML = h + '</div>';
+  $('zukanBox').addEventListener('click', function(ev){
+    var b = ev.target.closest ? ev.target.closest('.zbtn') : null;
+    if (b) openZ(+b.getAttribute('data-ch'), b);
+  });
+  $('zdlg').addEventListener('click', function(ev){
+    if (ev.target === $('zdlg')){ closeZ(); return; }
+    var el = ev.target.closest ? ev.target.closest('[data-zact]') : null;
+    if (!el) return;
+    var act = el.getAttribute('data-zact');
+    if (act === 'close') closeZ();
+    else if (act === 'prev') showZ((zCur + CHARS.length - 1) % CHARS.length);
+    else if (act === 'next') showZ((zCur + 1) % CHARS.length);
+    else if (act === 'go') showZ(+el.getAttribute('data-ch'));
+  });
+  document.addEventListener('keydown', function(ev){
+    if ($('zdlg').hidden) return;
+    if (ev.key === 'Escape'){ ev.preventDefault(); closeZ(); return; }
+    if (ev.key !== 'Tab') return;
+    var f = $('zdlg').querySelectorAll('button:not([disabled])');
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (ev.shiftKey && (document.activeElement === first || document.activeElement === $('zhead'))){ ev.preventDefault(); last.focus(); }
+    else if (!ev.shiftKey && document.activeElement === last){ ev.preventDefault(); first.focus(); }
+  });
+  updateZukanMark();
+}
+function zChips(arr){
+  return '<div class="zchips">' + arr.map(function(j){
+    var sp = zSplit(j);
+    return '<button type="button" class="zchip" data-zact="go" data-ch="' + j + '" aria-label="' + esc(CHARS[j].name) + 'の詳細に切り替える">'
+      + '<span class="zci">' + svgArt(j) + '</span><span>' + esc(sp.animal) + '</span></button>';
+  }).join('') + '</div>';
+}
+function showZ(i){
+  zCur = i;
+  var ch = CHARS[i], g = goodMatches(i), mine = (lastSolo && !lastSolo.sample) ? lastSolo.charIndex : -1;
+  var h = '<div class="zbody"><div class="zhero">' + svgArt(i) + '</div>'
+    + (i === mine ? '<p class="zyou"><span class="zbadge">あなた</span></p>' : '')
+    + '<h2 id="zhead" tabindex="-1" class="zname">' + esc(ch.name) + '</h2>'
+    + '<p class="catch" style="text-align:center">' + esc(ch.catchp) + '</p>'
+    + '<div class="tags"><span class="tag">' + ELEMS[stemElem(i)] + 'の気質</span><span class="tag">' + (stemYang(i) ? '陽' : '陰') + 'のタイプ</span></div>'
+    + '<h3>性格</h3><p>' + esc(ch.per) + '</p>'
+    + '<h3>強み</h3><ul class="pts">' + ch.str.map(function(s){ return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>'
+    + '<h3>気をつけたいこと</h3><ul class="pts">' + ch.cau.map(function(s){ return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>'
+    + '<h3>恋のクセ</h3><p>' + esc(ch.love) + '</p>'
+    + '<h3>仕事のスタイル</h3><p>' + esc(ch.work) + '</p>'
+    + '<h3>ラッキーカラー</h3><p><span class="sw" style="background:' + ch.col[1] + '"></span>' + esc(ch.col[0]) + '</p>'
+    + '<h3>SCENTでのおすすめ</h3><p>' + esc(ch.scent) + '</p>'
+    + '<h3>相性のいいキャラ</h3>'
+    + (g.same.length ? '<p class="small" style="margin:0">同じ五行（似たもの同士）</p>' + zChips(g.same) : '')
+    + (g.aid.length ? '<p class="small" style="margin:6px 0 0">支え合う関係</p>' + zChips(g.aid) : '')
+    + '</div>';
+  $('zscroll').innerHTML = h;
+  $('zscroll').scrollTop = 0;
+  $('zcount').textContent = (i + 1) + ' / ' + CHARS.length;
+  $('zhead').focus();
+}
+function openZ(i, opener){
+  zOpener = opener || null;
+  $('zdlg').hidden = false;
+  document.body.classList.add('zlock');
+  showZ(i);
+}
+function closeZ(){
+  if ($('zdlg').hidden) return;
+  $('zdlg').hidden = true;
+  document.body.classList.remove('zlock');
+  var back = zOpener;
+  if (zCur >= 0 && $('zukanBox')){
+    var btn = $('zukanBox').querySelector('.zbtn[data-ch="' + zCur + '"]');
+    if (btn) back = btn;
+  }
+  if (back) back.focus();
+  zOpener = null;
+}
+function updateZukanMark(){
+  var mine = (lastSolo && !lastSolo.sample) ? lastSolo.charIndex : -1;
+  var cards = $('zukanBox').querySelectorAll('.zbtn');
+  for (var k = 0; k < cards.length; k++){
+    var on = (+cards[k].getAttribute('data-ch')) === mine;
+    cards[k].classList.toggle('me', on);
+    cards[k].firstChild.innerHTML = on ? '<span class="zbadge">あなた</span>' : '';
+    cards[k].setAttribute('aria-label', CHARS[+cards[k].getAttribute('data-ch')].name + (on ? '（あなたのキャラ）' : '') + 'の詳細を見る');
+  }
+}
+
+/* =====================================================================
+   生まれ日カルテ（1枚にまとめた画面＋PNG画像で保存）
+   画面用のHTMLと、画像用のCanvas描画は、同じデータ（karteModel）から作る。
+   ===================================================================== */
+var KT_FACE_LABELS = ['人づきあいの顔','仕事の顔','素顔','心の奥'];
+var KT_YEAR_LABELS = ['去年','今年','来年','2年後','3年後','4年後','5年後'];
+
+function karteModel(){
+  var s = lastSolo || { name:'', y:1995, m:5, d:20, hh:null, sample:true };
+  var t = todayParts();
+  var hh = (s.hh === undefined) ? null : s.hh;
+  var p = calcPillars(s.y, s.m, s.d, hh), ds = p.day.s, ch = CHARS[ds], c = countElements(p);
+  var keys = ['year','month','day','hour'];
+  var faces = keys.map(function(k, i){ return { label:KT_FACE_LABELS[i], idx: p[k] ? p[k].s : null }; });
+  var years = [];
+  for (var k = -1; k <= 5; k++){
+    var pil = (k === 0) ? yearPillar(t.y, t.m, t.d) : yearPillar(t.y + k, 6, 1);
+    var f = fortuneOf(ds, pil);
+    years.push({ y:t.y + k, label:KT_YEAR_LABELS[k + 1], score:f.score, theme:TS_TEXT[f.ts].t, now:k === 0 });
+  }
+  var g = goodMatches(ds);
+  var matches = g.same.map(function(j){ return { idx:j, tag:'同じ五行' }; })
+    .concat(g.aid.map(function(j){ return { idx:j, tag:'支え合う' }; }));
+  return {
+    sample: !!s.sample, name: s.name || '', y:s.y, m:s.m, d:s.d, hh:hh, today:t,
+    dateStr: s.y + '年' + s.m + '月' + s.d + '日',
+    hhStr: (hh !== null) ? (hh + '時台') : '',
+    madeStr: t.y + '年' + t.m + '月' + t.d + '日',
+    ds:ds, ch:ch, c:c, adv:elemAdvice(c), faces:faces, years:years, matches:matches,
+    now: years[1], elemTag: ELEMS[stemElem(ds)] + 'の気質', yinTag: (stemYang(ds) ? '陽' : '陰') + 'のタイプ'
+  };
+}
+
+/* ---------- 画面用 ---------- */
+function renderKarte(){
+  var m = karteModel(), ch = m.ch, h = '', i;
+  var who = m.name ? esc(m.name) + ' さん' : 'あなた';
+  h += '<div class="kt"><div class="kt-in">';
+  if (m.sample) h += '<div style="text-align:center"><span class="sample">これは例です（' + m.dateStr + '生まれ）</span></div>';
+  h += '<div class="kt-brand"><p class="en">SCENT</p><div class="orn">✦ ✦ ✦</div><h2>生まれ日カルテ</h2></div>';
+  h += '<dl class="kt-info"><div><dt>お名前</dt><dd>' + who + '</dd></div>'
+    + '<div><dt>生年月日</dt><dd>' + m.dateStr + (m.hhStr ? '（出生時間 ' + m.hhStr + '）' : '') + '</dd></div>'
+    + '<div><dt>作成日</dt><dd>' + m.madeStr + '</dd></div></dl>';
+  h += '<div class="kt-hero">' + svgArt(m.ds) + '<p class="cname">' + esc(ch.name) + '</p><p class="catch" style="margin-bottom:8px">' + esc(ch.catchp) + '</p>'
+    + '<div class="tags"><span class="tag">' + m.elemTag + '</span><span class="tag">' + m.yinTag + '</span></div></div>';
+  h += '<div class="kt-score"><div class="num">' + m.now.score + '<small> / 100</small></div><div style="flex:1;min-width:0"><p><strong style="font-family:Shippori Mincho,serif">今年の追い風</strong></p>'
+    + '<div class="meter"><i style="width:' + m.now.score + '%"></i></div><p class="small">今年のテーマ：' + esc(m.now.theme) + '</p></div></div>';
+
+  h += '<h3 class="kt-h">4つの顔</h3><div class="kt-faces">';
+  m.faces.forEach(function(f){
+    if (f.idx === null){
+      h += '<div class="kt-face none"><b>' + f.label + '</b><p class="ct">出生時間がわかると表示</p></div>';
+    } else {
+      h += '<div class="kt-face"><b>' + f.label + '</b>' + svgArt(f.idx) + '<p class="nm">' + esc(CHARS[f.idx].name) + '</p><p class="ct">' + esc(CHARS[f.idx].catchp) + '</p></div>';
+    }
+  });
+  h += '</div>';
+
+  h += '<h3 class="kt-h">あなたの持ち味</h3><div class="kt-two">'
+    + '<div><h4>強み</h4><ul class="pts">' + ch.str.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>'
+    + '<div><h4>気をつけたいこと</h4><ul class="pts">' + ch.cau.map(function(x){ return '<li>' + esc(x) + '</li>'; }).join('') + '</ul></div>'
+    + '<div><h4>恋のクセ</h4><p>' + esc(ch.love) + '</p></div>'
+    + '<div><h4>仕事のスタイル</h4><p>' + esc(ch.work) + '</p></div></div>';
+
+  h += '<h3 class="kt-h">五行バランス</h3>' + radarSvg(m.c) + '<p style="margin:6px 0 0;font-size:14.5px">' + esc(m.adv) + '</p>';
+
+  h += '<h3 class="kt-h">これからの7年の流れ</h3><div class="kt-years"><table><tr>';
+  m.years.forEach(function(y){ h += '<th class="' + (y.now ? 'now' : '') + '">' + y.label + '<br>' + y.y + '</th>'; });
+  h += '</tr><tr>';
+  m.years.forEach(function(y){ h += '<td class="sc' + (y.now ? ' now' : '') + '">' + y.score + '</td>'; });
+  h += '</tr><tr>';
+  m.years.forEach(function(y){ h += '<td class="th' + (y.now ? ' now' : '') + '">' + esc(y.theme) + '</td>'; });
+  h += '</tr></table></div><p class="kt-scroll">左右にスクロールできます</p>';
+
+  h += '<h3 class="kt-h">相性のいいキャラ</h3><div class="kt-match">';
+  m.matches.forEach(function(x){ h += '<div>' + svgArt(x.idx) + esc(CHARS[x.idx].name) + '<i>' + x.tag + '</i></div>'; });
+  h += '</div>';
+
+  h += '<h3 class="kt-h">SCENTでのおすすめの過ごし方</h3><p style="margin:0 0 8px;font-size:14.5px">' + esc(ch.scent) + '</p>'
+    + '<p style="margin:0"><strong style="font-family:Shippori Mincho,serif">ラッキーカラー</strong>　<span class="sw" style="background:' + ch.col[1] + '"></span>' + esc(ch.col[0]) + '</p>';
+  h += '<p class="kt-foot">✦<br>エンターテインメントとしてお楽しみください。</p>';
+  h += '</div></div>';
+  $('karteBody').innerHTML = h;
+  $('karteMsg').textContent = '';
+}
+
+/* ---------- 画像用（Canvas 2D で直接描く） ---------- */
+var KT_MIN = '"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif';
+var KT_GOT = '"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif';
+var KT_BOD = '"Bodoni Moda","Didot",serif';
+var KT_NAVY = '#253A5E', KT_GOLD = '#D69C1C', KT_IVORY = '#FDF9EF', KT_CARD = '#FFFDF6', KT_PALE = '#FDF3D6', KT_GRAY = '#4b5a76', KT_BROWN = '#8a6410';
+var KT_W = 1080, KT_M = 72, KT_IW = KT_W - 2 * KT_M;
+var KT_NOHEAD = '。、，．）」』】！？!?,.)';
+var KT_CLASSES = {
+  n:  'fill="none" stroke="#253A5E" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"',
+  g:  'fill="none" stroke="#D69C1C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"',
+  gf: 'fill="#D69C1C" stroke="#D69C1C" stroke-width="1.5" stroke-linejoin="round"',
+  nf: 'fill="#253A5E" stroke="#253A5E" stroke-width="1"',
+  iv: 'fill="#FDF9EF" stroke="#253A5E" stroke-width="2.5" stroke-linejoin="round"'
+};
+// class指定を fill/stroke の属性に置きかえた、画像用のSVG文字列（ページのCSSは data URL のSVGに効かないため）
+function artSvgPlain(i){
+  var body = ART[i]().replace(/class="(n|g|gf|nf|iv)"/g, function(_, k){ return KT_CLASSES[k]; });
+  return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="480" height="480">' + body + '</svg>';
+}
+// レーダー：文字はCanvasで描くので、SVGからは文字を除く
+function radarSvgPlain(c){
+  return radarSvg(c).replace(/<text[\s\S]*?<\/text>/g, '').replace(' class="radar"', '')
+    .replace('<svg ', '<svg xmlns="http://www.w3.org/2000/svg" width="900" height="810" ');
+}
+function ktLoadImg(svg){
+  return new Promise(function(res, rej){
+    var im = new Image();
+    im.onload = function(){ res(im); };
+    im.onerror = function(){ rej(new Error('svg load')); };
+    im.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  });
+}
+function ktWrap(ctx, text, maxW){
+  var lines = [], line = '', i, ch;
+  for (i = 0; i < text.length; i++){
+    ch = text.charAt(i);
+    if (ch === '\n'){ lines.push(line); line = ''; continue; }
+    if (line && ctx.measureText(line + ch).width > maxW && KT_NOHEAD.indexOf(ch) < 0){ lines.push(line); line = ch; }
+    else line += ch;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+function ktT(K, text, x, y, font, color, align){
+  var c = K.ctx; c.font = font;
+  if (K.dry) return;
+  c.fillStyle = color; c.textAlign = align || 'left'; c.textBaseline = 'top'; c.fillText(text, x, y);
+}
+// 折り返して描く。戻り値：描いた後の y
+function ktP(K, text, x, y, maxW, font, color, lh, align){
+  var c = K.ctx; c.font = font;
+  var ls = ktWrap(c, text, maxW), i;
+  for (i = 0; i < ls.length; i++) ktT(K, ls[i], align === 'center' ? x + maxW / 2 : x, y + i * lh, font, color, align);
+  return y + ls.length * lh;
+}
+function ktLines(K, text, maxW, font){ K.ctx.font = font; return ktWrap(K.ctx, text, maxW).length; }
+// 字間をあけて中央に描く
+function ktSpaced(K, text, cx, y, font, color, sp){
+  var c = K.ctx; c.font = font;
+  var chars = text.split(''), w = 0, i;
+  for (i = 0; i < chars.length; i++) w += c.measureText(chars[i]).width + (i < chars.length - 1 ? sp : 0);
+  var x = cx - w / 2;
+  for (i = 0; i < chars.length; i++){
+    ktT(K, chars[i], x, y, font, color, 'left');
+    x += c.measureText(chars[i]).width + sp;
+  }
+}
+function ktLine(K, x1, y1, x2, y2, color, w, dash){
+  if (K.dry) return;
+  var c = K.ctx; c.save(); c.strokeStyle = color; c.lineWidth = w; c.setLineDash(dash || []);
+  c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); c.restore();
+}
+function ktBox(K, x, y, w, h, fill, stroke, lw, dash){
+  if (K.dry) return;
+  var c = K.ctx; c.save();
+  if (fill){ c.fillStyle = fill; c.fillRect(x, y, w, h); }
+  if (stroke){ c.strokeStyle = stroke; c.lineWidth = lw || 1; c.setLineDash(dash || []); c.strokeRect(x, y, w, h); }
+  c.restore();
+}
+function ktImg(K, im, x, y, w, h){ if (!K.dry && im) K.ctx.drawImage(im, x, y, w, h); }
+function ktHead(K, title, y){
+  ktT(K, '✦', KT_M, y + 8, '600 22px ' + KT_MIN, KT_GOLD);
+  ktT(K, title, KT_M + 38, y, '600 36px ' + KT_MIN, KT_NAVY);
+  ktLine(K, KT_M, y + 58, KT_W - KT_M, y + 58, 'rgba(214,156,28,.6)', 1.5);
+  return y + 82;
+}
+
+function ktLayout(K, m, im){
+  var ctx = K.ctx, M = KT_M, IW = KT_IW, W = KT_W, ch = m.ch, y = 74, i, x, f;
+  if (!K.dry){ ctx.fillStyle = KT_IVORY; ctx.fillRect(0, 0, W, K.H); }
+
+  // 「これは例です」の帯
+  if (m.sample){
+    ktBox(K, M, y, IW, 56, KT_PALE, KT_GOLD, 1.5, [6, 4]);
+    ktT(K, 'これは例です（' + m.dateStr + '生まれ）', W / 2, y + 14, '500 26px ' + KT_GOT, KT_NAVY, 'center');
+    y += 56 + 30;
+  }
+  // 上部：ロゴ文字・タイトル
+  ktSpaced(K, 'SCENT', W / 2, y, '400 34px ' + KT_BOD, KT_GOLD, 12); y += 52;
+  ktSpaced(K, '✦ ✦ ✦', W / 2, y, '400 22px ' + KT_MIN, KT_GOLD, 14); y += 40;
+  ktSpaced(K, '生まれ日カルテ', W / 2, y, '600 68px ' + KT_MIN, KT_NAVY, 12); y += 108;
+
+  // お名前・生年月日・作成日
+  var who = m.name ? m.name + ' さん' : 'あなた';
+  var rows = [['お名前', who], ['生年月日', m.dateStr + (m.hhStr ? '（出生時間 ' + m.hhStr + '）' : '')], ['作成日', m.madeStr]];
+  ktLine(K, M, y, W - M, y, 'rgba(214,156,28,.6)', 1.5);
+  rows.forEach(function(r){
+    ktT(K, r[0], M + 8, y + 17, '400 24px ' + KT_GOT, KT_GRAY);
+    ktT(K, r[1], M + 220, y + 12, '400 32px ' + KT_MIN, KT_NAVY);
+    y += 62;
+    ktLine(K, M, y, W - M, y, 'rgba(214,156,28,.35)', 1);
+  });
+  y += 40;
+
+  // メイン：キャラクターのイラスト・名前・キャッチ
+  var artS = 320, rx = M + artS + 36, rw = W - M - rx, y0 = y;
+  ktBox(K, M, y0, artS, artS, KT_CARD, 'rgba(214,156,28,.6)', 1.5);
+  ktImg(K, im['a' + m.ds], M + 10, y0 + 10, artS - 20, artS - 20);
+  var ry = y0 + 6;
+  ry = ktP(K, ch.name, rx, ry, rw, '600 42px ' + KT_MIN, KT_NAVY, 58) + 8;
+  ry = ktP(K, ch.catchp, rx, ry, rw, '400 28px ' + KT_MIN, KT_BROWN, 42) + 14;
+  [m.elemTag, m.yinTag].forEach(function(tg){
+    ctx.font = '400 24px ' + KT_GOT;
+    var tw = ctx.measureText(tg).width + 36;
+    ktBox(K, rx, ry, tw, 44, null, KT_GOLD, 1.5);
+    ktT(K, tg, rx + 18, ry + 7, '400 24px ' + KT_GOT, KT_NAVY);
+    rx += tw + 12;
+  });
+  rx = M + artS + 36;
+  y = Math.max(y0 + artS, ry + 44) + 34;
+
+  // 今年の追い風
+  ktBox(K, M, y, IW, 168, KT_PALE, KT_GOLD, 2);
+  ktT(K, '今年の追い風', M + 32, y + 22, '600 32px ' + KT_MIN, KT_NAVY);
+  ktT(K, m.now.y + '年', M + 32 + 200, y + 28, '400 24px ' + KT_GOT, KT_GRAY);
+  ktBox(K, M + 32, y + 78, 560, 14, '#efe4c6', KT_GOLD, 1.5);
+  ktBox(K, M + 32, y + 78, 560 * m.now.score / 100, 14, KT_GOLD, null);
+  ktP(K, '今年のテーマ：' + m.now.theme, M + 32, y + 108, 600, '400 26px ' + KT_GOT, KT_NAVY, 36);
+  ktT(K, String(m.now.score), W - M - 150, y + 22, '600 100px ' + KT_BOD, KT_GOLD, 'right');
+  ktT(K, '/ 100', W - M - 32, y + 98, '400 26px ' + KT_BOD, KT_GRAY, 'right');
+  y += 168 + 56;
+
+  // 4つの顔
+  y = ktHead(K, '4つの顔', y);
+  var cw = (IW - 24) / 2, ci, row, cx2, cy2, rowH;
+  for (row = 0; row < 2; row++){
+    rowH = 0;
+    var cells = [m.faces[row * 2], m.faces[row * 2 + 1]];
+    cells.forEach(function(fc){
+      var hgt = 220;
+      if (fc.idx !== null){
+        hgt = Math.max(hgt, 62 + ktLines(K, CHARS[fc.idx].name, cw - 190, '600 26px ' + KT_MIN) * 36 + 8 + ktLines(K, CHARS[fc.idx].catchp, cw - 190, '400 22px ' + KT_GOT) * 32 + 22);
+      }
+      rowH = Math.max(rowH, hgt);
+    });
+    cells.forEach(function(fc, k){
+      x = M + k * (cw + 24);
+      if (fc.idx === null){
+        ktBox(K, x, y, cw, rowH, null, 'rgba(214,156,28,.7)', 1.5, [8, 6]);
+        ktT(K, fc.label, x + 22, y + 18, '600 28px ' + KT_MIN, KT_BROWN);
+        ktP(K, '出生時間がわかると表示', x + 20, y + rowH / 2 - 4, cw - 40, '400 24px ' + KT_GOT, KT_GRAY, 34, 'center');
+      } else {
+        ktBox(K, x, y, cw, rowH, KT_CARD, 'rgba(214,156,28,.7)', 1.5);
+        ktT(K, fc.label, x + 22, y + 16, '600 28px ' + KT_MIN, KT_BROWN);
+        ktImg(K, im['a' + fc.idx], x + 14, y + 62, 150, 150);
+        var ty = ktP(K, CHARS[fc.idx].name, x + 176, y + 62, cw - 190, '600 26px ' + KT_MIN, KT_NAVY, 36) + 8;
+        ktP(K, CHARS[fc.idx].catchp, x + 176, ty, cw - 190, '400 22px ' + KT_GOT, KT_GRAY, 32);
+      }
+    });
+    y += rowH + 24;
+  }
+  y += 28;
+
+  // あなたの持ち味
+  y = ktHead(K, 'あなたの持ち味', y);
+  var colW = (IW - 40) / 2, lx = M, rx2 = M + colW + 40;
+  function bullets(arr, bx, by){
+    arr.forEach(function(s){
+      ktT(K, '◆', bx, by + 6, '400 16px ' + KT_GOT, KT_GOLD);
+      by = ktP(K, s, bx + 34, by, colW - 34, '400 26px ' + KT_GOT, KT_NAVY, 40) + 8;
+    });
+    return by;
+  }
+  ktT(K, '強み', lx, y, '600 30px ' + KT_MIN, KT_BROWN);
+  ktT(K, '気をつけたいこと', rx2, y, '600 30px ' + KT_MIN, KT_BROWN);
+  var ya = bullets(ch.str, lx, y + 52), yb = bullets(ch.cau, rx2, y + 52);
+  y = Math.max(ya, yb) + 20;
+  ktT(K, '恋のクセ', lx, y, '600 30px ' + KT_MIN, KT_BROWN);
+  ktT(K, '仕事のスタイル', rx2, y, '600 30px ' + KT_MIN, KT_BROWN);
+  ya = ktP(K, ch.love, lx, y + 52, colW, '400 25px ' + KT_GOT, KT_NAVY, 40);
+  yb = ktP(K, ch.work, rx2, y + 52, colW, '400 25px ' + KT_GOT, KT_NAVY, 40);
+  y = Math.max(ya, yb) + 56;
+
+  // 五行バランス
+  y = ktHead(K, '五行バランス', y);
+  var rs = 1.4667, rW = 300 * rs, rH = 270 * rs;
+  ktImg(K, im.radar, M, y, rW, rH);
+  if (!K.dry){
+    for (i = 0; i < 5; i++){
+      var a = -Math.PI / 2 + i * 2 * Math.PI / 5;
+      var lxp = 150 + (90 + 22) * Math.cos(a), lyp = 140 + (90 + 22) * Math.sin(a) + 5;
+      ktT(K, ELEMS[i] + ' ' + m.c[i], M + lxp * rs, y + (lyp - 15) * rs, '600 ' + Math.round(22) + 'px ' + KT_MIN, KT_NAVY, 'center');
+    }
+  }
+  var ax = M + rW + 36, aw = W - M - ax - 14;
+  ktT(K, '木 ' + m.c[0] + '　火 ' + m.c[1] + '　土 ' + m.c[2] + '　金 ' + m.c[3] + '　水 ' + m.c[4], ax, y + 20, '600 26px ' + KT_MIN, KT_BROWN);
+  var ye = ktP(K, m.adv, ax, y + 72, aw, '400 25px ' + KT_GOT, KT_NAVY, 40);
+  y = Math.max(y + rH, ye) + 56;
+
+  // これからの7年の流れ
+  y = ktHead(K, 'これからの7年の流れ', y);
+  var n = m.years.length, tw7 = Math.floor(IW / n), tx0 = M + Math.floor((IW - tw7 * n) / 2), maxL = 1;
+  m.years.forEach(function(yr){ maxL = Math.max(maxL, ktLines(K, yr.theme, tw7 - 20, '400 21px ' + KT_GOT)); });
+  var hHead = 84, hScore = 96, hTheme = maxL * 30 + 28, tH = hHead + hScore + hTheme;
+  m.years.forEach(function(yr, k){
+    var cx = tx0 + k * tw7;
+    ktBox(K, cx, y, tw7, tH, yr.now ? KT_PALE : KT_CARD, null);
+  });
+  ktLine(K, tx0, y + hHead, tx0 + tw7 * n, y + hHead, 'rgba(214,156,28,.55)', 1);
+  ktLine(K, tx0, y + hHead + hScore, tx0 + tw7 * n, y + hHead + hScore, 'rgba(214,156,28,.55)', 1);
+  ktBox(K, tx0, y, tw7 * n, tH, null, 'rgba(214,156,28,.8)', 1.5);
+  m.years.forEach(function(yr, k){
+    var cx = tx0 + k * tw7, mid = cx + tw7 / 2;
+    if (k > 0) ktLine(K, cx, y, cx, y + tH, 'rgba(214,156,28,.45)', 1);
+    ktT(K, yr.label, mid, y + 12, (yr.now ? '700 ' : '400 ') + '22px ' + KT_GOT, yr.now ? KT_BROWN : KT_GRAY, 'center');
+    ktT(K, String(yr.y), mid, y + 44, '400 26px ' + KT_BOD, KT_NAVY, 'center');
+    ktT(K, String(yr.score), mid, y + hHead + 10, '600 44px ' + KT_BOD, yr.now ? KT_BROWN : KT_NAVY, 'center');
+    ktBox(K, cx + 16, y + hHead + 70, tw7 - 32, 8, '#efe4c6', null);
+    ktBox(K, cx + 16, y + hHead + 70, (tw7 - 32) * Math.max(0, Math.min(100, yr.score)) / 100, 8, yr.now ? KT_NAVY : KT_GOLD, null);
+    ktP(K, yr.theme, cx + 10, y + hHead + hScore + 14, tw7 - 20, (yr.now ? '500 ' : '400 ') + '21px ' + KT_GOT, KT_NAVY, 30, 'center');
+  });
+  if (!K.dry){ ctx.save(); ctx.strokeStyle = KT_NAVY; ctx.lineWidth = 3; ctx.strokeRect(tx0 + tw7, y, tw7, tH); ctx.restore(); }
+  y += tH + 12;
+  ktT(K, '数字は、その年の運気のめやす（100点満点）です。', M, y, '400 21px ' + KT_GOT, KT_GRAY);
+  y += 30 + 52;
+
+  // 相性のいいキャラ
+  y = ktHead(K, '相性のいいキャラ', y);
+  var per = 5, mw = IW / per, rowsN = Math.ceil(m.matches.length / per), r2;
+  for (r2 = 0; r2 < rowsN; r2++){
+    var part = m.matches.slice(r2 * per, r2 * per + per), mh = 0;
+    part.forEach(function(it, k){
+      var mx = M + k * mw, mid = mx + mw / 2;
+      ktImg(K, im['a' + it.idx], mid - 66, y, 132, 132);
+      var ny = ktP(K, CHARS[it.idx].name, mx + 8, y + 140, mw - 16, '400 21px ' + KT_MIN, KT_NAVY, 30, 'center');
+      ktT(K, it.tag, mid, ny + 4, '400 19px ' + KT_GOT, KT_BROWN, 'center');
+      mh = Math.max(mh, ny + 34 - y);
+    });
+    y += mh + 20;
+  }
+  y += 32;
+
+  // 下部：おすすめの過ごし方・ラッキーカラー
+  y = ktHead(K, 'SCENTでのおすすめの過ごし方', y);
+  var sTop = y, sEnd = ktP(K, ch.scent, M + 32, sTop + 26, IW - 64, '400 27px ' + KT_GOT, KT_NAVY, 44);
+  ktBox(K, M, sTop, IW, sEnd - sTop + 26, KT_CARD, 'rgba(214,156,28,.7)', 1.5);
+  ktP(K, ch.scent, M + 32, sTop + 26, IW - 64, '400 27px ' + KT_GOT, KT_NAVY, 44);
+  y = sEnd + 26 + 36;
+  ktT(K, 'ラッキーカラー', M, y + 6, '600 30px ' + KT_MIN, KT_BROWN);
+  ktBox(K, M + 250, y, 48, 48, ch.col[1], KT_NAVY, 2);
+  ktT(K, ch.col[0], M + 316, y + 6, '400 30px ' + KT_MIN, KT_NAVY);
+  y += 48 + 56;
+  ktLine(K, M, y, W - M, y, 'rgba(214,156,28,.6)', 1.5);
+  y += 28;
+  ktSpaced(K, '✦', W / 2, y, '400 24px ' + KT_MIN, KT_GOLD, 0); y += 44;
+  ktT(K, 'エンターテインメントとしてお楽しみください。', W / 2, y, '400 26px ' + KT_GOT, KT_GRAY, 'center'); y += 46;
+  ktSpaced(K, 'SCENT', W / 2, y, '400 22px ' + KT_BOD, KT_GOLD, 8);
+  y += 30 + 74;
+
+  if (!K.dry){
+    ctx.save();
+    ctx.strokeStyle = KT_GOLD; ctx.lineWidth = 3; ctx.strokeRect(22, 22, W - 44, y - 44);
+    ctx.strokeStyle = 'rgba(214,156,28,.5)'; ctx.lineWidth = 1.5; ctx.strokeRect(34, 34, W - 68, y - 68);
+    ctx.restore();
+  }
+  return y;
+}
+
+async function ktLoadFonts(m){
+  if (!(document.fonts && document.fonts.load)) return;
+  var txt = 'SCENT生まれ日カルテ0123456789/ ✦◆' + JSON.stringify(CHARS) + JSON.stringify(TS_TEXT.map(function(t){ return t.t; })) + JSON.stringify(m)
+    + FACES.join('') + '木火土金水去年今年来年後同じ五行支え合う';
+  var specs = ['400 28px "Shippori Mincho"', '600 28px "Shippori Mincho"', '400 28px "Zen Kaku Gothic New"', '500 28px "Zen Kaku Gothic New"', '700 28px "Zen Kaku Gothic New"', '400 28px "Bodoni Moda"', '600 28px "Bodoni Moda"'];
+  var job = Promise.all(specs.map(function(sp){ return document.fonts.load(sp, txt).catch(function(){}); })).then(function(){ return document.fonts.ready; });
+  await Promise.race([job, new Promise(function(r){ setTimeout(r, 10000); })]);
+}
+// 戻り値：{ blob, width, height }
+async function renderKarteBlob(){
+  var m = karteModel();
+  await ktLoadFonts(m);
+  var im = {}, need = {}, jobs = [];
+  need[m.ds] = 1;
+  m.faces.forEach(function(f){ if (f.idx !== null) need[f.idx] = 1; });
+  m.matches.forEach(function(x){ need[x.idx] = 1; });
+  Object.keys(need).forEach(function(k){ jobs.push(ktLoadImg(artSvgPlain(+k)).then(function(img){ im['a' + k] = img; })); });
+  jobs.push(ktLoadImg(radarSvgPlain(m.c)).then(function(img){ im.radar = img; }));
+  await Promise.all(jobs);
+  var tmp = document.createElement('canvas'); tmp.width = KT_W; tmp.height = 10;
+  var H = Math.ceil(ktLayout({ ctx:tmp.getContext('2d'), dry:true, H:0 }, m, im));
+  var cv = document.createElement('canvas'); cv.width = KT_W; cv.height = H;
+  ktLayout({ ctx:cv.getContext('2d'), dry:false, H:H }, m, im);
+  var blob = await new Promise(function(res){ cv.toBlob(res, 'image/png'); });
+  if (!blob) throw new Error('toBlob');
+  return { blob:blob, width:KT_W, height:H };
+}
+
+var karteCache = { key:'', blob:null, url:'' };
+function karteKey(){
+  var s = lastSolo || {};
+  var t = todayParts();
+  return [s.name || '', s.y, s.m, s.d, s.hh, s.sample ? 1 : 0, t.y, t.m, t.d].join('|');
+}
+function karteDownload(blob, filename){
+  var url = URL.createObjectURL(blob), a = document.createElement('a');
+  a.href = url; a.download = filename; a.rel = 'noopener';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 30000);
+}
+function karteShowPreview(blob){
+  if (karteCache.url) URL.revokeObjectURL(karteCache.url);
+  karteCache.url = URL.createObjectURL(blob);
+  var old = $('karteMsg').parentNode.querySelector('.kt-prev');
+  if (old) old.parentNode.removeChild(old);
+  var im = document.createElement('img');
+  im.className = 'kt-prev'; im.alt = '生まれ日カルテの画像（長押しで保存できます）'; im.src = karteCache.url;
+  $('karteMsg').parentNode.appendChild(im);
+}
+function setupKarteSave(){
+  var btn = $('karteSave');
+  btn.addEventListener('click', async function(){
+    var msg = $('karteMsg'), key = karteKey(), fresh = false;
+    btn.disabled = true;
+    try {
+      if (karteCache.key !== key || !karteCache.blob){
+        msg.textContent = '画像を作っています…';
+        var r = await renderKarteBlob();
+        karteCache.key = key; karteCache.blob = r.blob; fresh = true;
+      }
+      var nm = (lastSolo && lastSolo.name ? lastSolo.name : 'あなた').replace(/[\\\/:*?"<>|]/g, '') || 'あなた';
+      var filename = 'SCENT_カルテ_' + nm + '.png';
+      var file = null;
+      try { file = new File([karteCache.blob], filename, { type:'image/png' }); } catch (e1) { file = null; }
+      // (1) 共有シート（LINEなどに送りやすい）
+      if (file && navigator.share && navigator.canShare && navigator.canShare({ files:[file] })){
+        try {
+          await navigator.share({ files:[file], title:'SCENT 生まれ日カルテ' });
+          msg.textContent = '共有しました。';
+          return;
+        } catch (e2) {
+          if (e2 && e2.name === 'AbortError'){ msg.textContent = ''; return; }
+          if (e2 && e2.name === 'NotAllowedError' && fresh){
+            msg.textContent = '画像ができました。もう一度「画像で保存」を押してください。';
+            return;
+          }
+          // それ以外の失敗は、下のダウンロードに進む
+        }
+      }
+      // (2) ダウンロード
+      karteDownload(karteCache.blob, filename);
+      msg.textContent = '画像を保存しました。保存できていない場合は、下の画像を長押しして保存してください。';
+      karteShowPreview(karteCache.blob);
+    } catch (e) {
+      msg.textContent = '保存できませんでした。画面を長押しして保存してください。';
+    } finally {
+      btn.disabled = false;
+    }
+  });
+}
+
+function registerSW(){
+  if (!('serviceWorker' in navigator)) return;
+  var ok = location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  if (!ok) return;
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  });
+}
+
+function init(){
+  fillDateSelects('yr','mo','dy',1995,5,20);
+  fillDateSelects('py1','pm1','pd1',1995,5,20);
+  fillDateSelects('py2','pm2','pd2',1998,11,3);
+  $('unk').addEventListener('change', function(){ $('timeBox').hidden = $('unk').checked; });
+  $('go').addEventListener('click', function(){
+    $('msg').textContent = '';
+    if (!$('unk').checked && !$('tm').value){ $('msg').textContent = '時間が入っていないので、出生時間なしで占います。'; }
+    showSolo(false);
+    luckDate = null;
+    renderLuck();
+    if (!$('panelKarte').hidden) renderKarte();
+    (!$('panelKarte').hidden ? $('karteBody') : $('result')).scrollIntoView({ behavior: smooth(), block:'start' });
+  });
+  $('goPair').addEventListener('click', function(){
+    var a = readDate('py1','pm1','pd1'), b = readDate('py2','pm2','pd2');
+    var r = buildPair($('pn1').value.trim(), a, $('pn2').value.trim(), b, false);
+    $('pairResult').innerHTML = r.html; pairText = r.text; $('copyMsg2').textContent = ''; $('copyArea2').classList.remove('show');
+    $('pairResult').scrollIntoView({ behavior: smooth(), block:'start' });
+  });
+  setupCopy('copyBtn','copyMsg','copyArea', function(){ return soloText; });
+  setupCopy('copyBtn2','copyMsg2','copyArea2', function(){ return pairText; });
+  $('tabChar').addEventListener('click', function(){ setTab('char'); });
+  $('tabLuck').addEventListener('click', function(){ setTab('luck'); });
+  $('tabPair').addEventListener('click', function(){ setTab('pair'); });
+  $('tabZukan').addEventListener('click', function(){ setTab('zukan'); });
+  $('tabKarte').addEventListener('click', function(){ setTab('karte'); });
+  setupKarteSave();
+  buildZukan();
+  $('lkDay').addEventListener('click', function(){ setLuckMode('day'); });
+  $('lkMonth').addEventListener('click', function(){ setLuckMode('month'); });
+  $('lkYear').addEventListener('click', function(){ setLuckMode('year'); });
+  $('lkLife').addEventListener('click', function(){ setLuckMode('life'); });
+
+  // 最初の画面：例（1995年5月20日生まれ）を表示
+  showSolo(true);
+  $('pairResult').innerHTML = buildPair('', {y:1995,m:5,d:20}, '', {y:1998,m:11,d:3}, true).html;
+  registerSW();
+}
+init();
+</script>
+</body>
+</html>
